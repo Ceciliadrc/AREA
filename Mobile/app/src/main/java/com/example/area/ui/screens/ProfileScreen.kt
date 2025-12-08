@@ -31,8 +31,9 @@ import com.example.area.ui.theme.*
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
-    onEditProfile: () -> Unit = {}
+    onEditProfile: () -> Unit = {},
+    onNavigateToWorkflows: () -> Unit = {},
+    onNavigateToActions: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -269,125 +270,4 @@ fun StatsCard(
     }
 }
 
-@Composable
-fun BottomNavBar(
-    currentRoute: String,
-    onWorkflowsClick: () -> Unit,
-    onActionsClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(80.dp),
-        color = Color.Transparent,
-        shadowElevation = 8.dp
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Transparent),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            // Floating Nav Bar Background
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp)
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(Blossom, Peony, Mauve)
-                        )
-                    )
-            )
 
-            // Navigation Buttons
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp)
-                    .padding(horizontal = 32.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Workflows Button (Left)
-                NavButton(
-                    icon = Icons.AutoMirrored.Filled.List,
-                    label = "Workflows",
-                    isSelected = currentRoute == "workflows",
-                    onClick = onWorkflowsClick,
-                    gradientStart = if (currentRoute == "workflows") Peony else Blossom,
-                    gradientEnd = if (currentRoute == "workflows") Mauve else Peony
-                )
-
-                // Spacer for center
-                Spacer(modifier = Modifier.width(60.dp))
-
-                // Actions Button (Right)
-                NavButton(
-                    icon = Icons.Default.Add,
-                    label = "New Action",
-                    isSelected = currentRoute == "actions",
-                    onClick = onActionsClick,
-                    gradientStart = if (currentRoute == "actions") Peony else Blossom,
-                    gradientEnd = if (currentRoute == "actions") Mauve else Peony
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun NavButton(
-    icon: ImageVector,
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    gradientStart: Color,
-    gradientEnd: Color,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .width(80.dp)
-            .clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .size(if (isSelected) 50.dp else 44.dp)
-                .clip(CircleShape)
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(gradientStart, gradientEnd)
-                    )
-                    /*if (isSelected) {
-                        Brush.linearGradient(
-                            colors = listOf(gradientStart, gradientEnd)
-                        )
-                    } else {
-                        Color.Transparent
-                    }*/
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = if (isSelected) Color.White else Color.White.copy(alpha = 0.8f),
-                modifier = Modifier.size(if (isSelected) 26.dp else 22.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = if (isSelected) Color.White else Color.White.copy(alpha = 0.8f),
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-        )
-    }
-}
