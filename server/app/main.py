@@ -21,17 +21,31 @@ async def root():
 @app.get("/about.json")
 async def about(db: Session = Depends(database.get_db)):
 
-    services_list = []
+    services_data = []
     services = db.query(models.Service).all()
 
-    # for service in services:
-    #     actions =
+    for service in services:
+        actions = db.query(models.Action).filter(models.Action.service_id == service.id).all()
+    
+    for service in services:
+        reactions = db.query(models.Reaction).filter(models.Reaction.service_id == service.id).all()
+
+    services_data.append({
+            "name": service.name,
+            "actions": [
+                {"name": action.name}
+                for action in actions
+            ],
+            "reactions": [
+                {"name": reaction.name}
+                for reaction in reactions
+            ]
+        })
 
     return {
         "client": {"host": "127.0.0.1"},
         "server": {
             "current_time": int(time.time()),
-            "services": services_list
+            "services": services_data
         }
     }
-# main a finir

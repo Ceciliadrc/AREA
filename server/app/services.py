@@ -33,3 +33,33 @@ def get_one_service(service_id: int, db: Session = Depends(database.get_db)):
         "name": service.name,
         "display_name": service.display_name
     }
+
+@router.get("/{service_id}/actions")
+def get_service_action(service_id: int, db: Session = Depends(database.get_db)):
+
+    actions = db.query(models.Action).filter(models.Action.service_id == service_id).all()
+
+    return {
+        "service_id": service_id,
+        "actions": [{
+            "id": action.id,
+            "name": action.name,
+        }
+        for action in actions
+        ]
+    }
+
+@router.get("/{service_id}/reactions")
+def get_service_reaction(service_id: int, db: Session = Depends(database.get_db)):
+
+    reactions = db.query(models.Reaction).filter(models.Reaction.service_id == service_id).all()
+
+    return {
+        "service_id": service_id,
+        "reactions": [{
+            "id": reaction.id,
+            "name": reaction.name,
+        }
+        for reaction in reactions
+        ]
+    }
