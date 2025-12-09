@@ -3,9 +3,9 @@ services:
     image: postgres:16
     restart: always
     environment:
-      - POSTGRES_DB=db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
@@ -14,8 +14,8 @@ services:
   server: # http://localhost:8080/about.json
     build: ./server
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - back-tier
     ports: # application server on port 8080
