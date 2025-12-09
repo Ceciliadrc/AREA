@@ -2,11 +2,21 @@ from fastapi import FastAPI, Depends
 import time
 from app import models, database
 from sqlalchemy.orm import Session
-from auth import router as auth_router
-from areas import router as areas_router
-from services import router as services_router
+from .auth import router as auth_router
+from .areas import router as areas_router
+from .services import router as services_router
+from sqlalchemy import exc
 
-models.Base.metadata.create_all(bind=database.engine) # cree les tables
+def wait_for_db():
+    for _ in range(10):
+        try:
+            database.engine.connect()
+            return True
+        except exc.OperationalError:
+            time.sleep(1)
+    return False
+if wait_for_db():
+    models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI()
 
@@ -26,10 +36,8 @@ async def about(db: Session = Depends(database.get_db)):
 
     for service in services:
         actions = db.query(models.Action).filter(models.Action.service_id == service.id).all()
-    
-    for service in services:
         reactions = db.query(models.Reaction).filter(models.Reaction.service_id == service.id).all()
-
+    
     services_data.append({
             "name": service.name,
             "actions": [

@@ -30,7 +30,7 @@ def register(username: str, email: str, password: str, db: Session = Depends(dat
     new_user = models.User(
         username=username,
         email=email,
-        hashed_password=hashed
+        password=hashed
     )
     db.add(new_user)
     db.commit()

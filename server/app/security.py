@@ -14,6 +14,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def authenticate_user(db: Session, email: str, password: str):
     user = db.query(models.User).filter(models.User.email == email).first()
-    if not user or not verify_password(password, user.hashed_password):
+    if not user or not verify_password(password, user.password):
         return None
     return user
