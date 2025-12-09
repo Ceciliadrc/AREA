@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.area.ui.screens.*
 import com.example.area.ui.theme.AreaTheme
@@ -60,6 +62,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+@Preview(showBackground = true)
 fun AppContent() {
     val navController = rememberNavController()
 
@@ -67,7 +70,7 @@ fun AppContent() {
 
     NavHost(
         navController = navController,
-        startDestination = if (isLoggedIn) "profile" else "login",
+        startDestination = if (isLoggedIn) "main" else "login",
         modifier = Modifier.fillMaxSize()
     ) {
         composable("login") {
@@ -84,34 +87,87 @@ fun AppContent() {
             )
         }
 
-        composable("profile") {
-            ProfileScreen(
-                onEditProfile = { navController.navigate("editProfile") },
-                onNavigateToWorkflows = { navController.navigate("workflows") },
-                onNavigateToActions = { navController.navigate("actions") }
-            )
-        }
-
-        composable("workflows") {
-            WorkflowsScreen(
-                onNavigateToProfile = { navController.navigate("profile") },
-                onNavigateToActions = { navController.navigate("actions") }
-            )
-        }
-
-        composable("actions") {
-            ActionScreen(
-                onNavigateToProfile = { navController.navigate("profile") },
-                onNavigateToWorkflows = { navController.navigate("workflows") }
+        composable("main") {
+            MainAppScreen(
+                navController = navController,
+                onLogout = {
+                    isLoggedIn = false
+                    navController.navigate("main") {
+                        popUpTo("main") { inclusive = true }
+                    }
+                }
             )
         }
 
         composable("register") {
             Text("Register Screen - TODO")
         }
+    }
+}
 
-        composable("editProfile") {
-            Text("Edit Profile Screen - TODO")
+@Composable
+fun MainAppScreen(navController: NavHostController, onLogout: () -> Unit) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route ?: "profile"
+
+    val showBottomNav = when (currentRoute) {
+        "profile", "workflows", "actions" -> true
+        else -> false
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        NavHost(
+            navController = navController,
+            startDestination = "profile",
+            modifier = Modifier.fillMaxSize()
+        ) {
+            composable("profile") {
+                ProfileScreen(
+                    onEditProfile = { navController.navigate("editProfile") }
+                )
+            }
+
+            composable("workflows") {
+                WorkflowsScreen(
+                )
+            }
+
+            composable("actions") {
+                ActionScreen(
+                )
+            }
+
+            composable("editProfile") {
+                Text("Edit Profile Screen - TODO")
+            }
+        }
+
+        if (showBottomNav) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+            ) {
+                BottomNavBar(
+                    currentRoute = currentRoute,
+                    onWorkflowsClick = {
+                        navController.navigate("workflows") {
+                            // Single top - prevents multiple copies
+                            launchSingleTop = true
+                        }
+                    },
+                    onActionsClick = {
+                        navController.navigate("actions") {
+                            launchSingleTop = true
+                        }
+                    },
+                    onProfileClick = {
+                        navController.navigate("profile") {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
         }
     }
 }
@@ -129,6 +185,7 @@ fun BottomNavBar(
     currentRoute: String,
     onWorkflowsClick: () -> Unit,
     onActionsClick: () -> Unit,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -182,6 +239,17 @@ fun BottomNavBar(
                     onClick = onActionsClick,
                     gradientStart = if (currentRoute == "actions") Peony else Blossom,
                     gradientEnd = if (currentRoute == "actions") Mauve else Peony
+                )
+
+                Spacer(modifier = Modifier.width(60.dp))
+
+                NavButton(
+                    icon = Icons.Default.Person,
+                    label = "Profile",
+                    isSelected = currentRoute == "profile",
+                    onClick = onProfileClick,
+                    gradientStart = if (currentRoute == "profile") Peony else Blossom,
+                    gradientEnd = if (currentRoute == "profile") Mauve else Peony
                 )
             }
         }
