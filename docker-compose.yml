@@ -1,15 +1,13 @@
-version: "3"
-
 services:
   db: # can change
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
       - POSTGRES_DB=db
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
     volumes:
-      - db-data
+      - db-data:/var/lib/postgresql/data
     networks:
       - back-tier
 
@@ -41,6 +39,8 @@ services:
     depends_on: # The client_web depends on client_mobile AND server.
       - server
       - client_mobile
+    networks:
+      - back-tier
 
 networks:
   back-tier: {}

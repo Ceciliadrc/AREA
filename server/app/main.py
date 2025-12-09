@@ -2,9 +2,9 @@ from fastapi import FastAPI, Depends
 import time
 from app import models, database
 from sqlalchemy.orm import Session
-from auth import router as auth_router
-from areas import router as areas_router
-from services import router as services_router
+from app.auth import router as auth_router
+from app.areas import router as areas_router
+from app.services import router as services_router
 
 models.Base.metadata.create_all(bind=database.engine) # cree les tables
 
