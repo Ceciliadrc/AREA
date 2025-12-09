@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
-from .database import Base
+from database import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -36,4 +36,3 @@ class Area(Base):
     user_id = Column(Integer, ForeignKey("users.id")) # lien vers quel utilisateur possède cet AREA
     action_id = Column(Integer, ForeignKey("actions.id")) # l'action qui declenche
     reaction_id = Column(Integer, ForeignKey("reactions.id")) # reaction a executer
-
