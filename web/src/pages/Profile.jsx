@@ -5,7 +5,7 @@
 ** Profile.jsx
 */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import AppLayout from "../components/layout/AppLayout";
 import BottomNav from "../components/nav/BottomNav";
@@ -17,16 +17,15 @@ import TextInput from "../components/ui/TextInput";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { colors } from "../components/theme";
 
+import api from "../apiFetcher/api.js";
+
 export default function Profile({ goTo }) {
-  const credentials = [ // TODO: requête api
+  const credentials = [ // TODO: requête api qui récupère tous les services auquels on est connectés
     // { id: "github", provider: "Github", account: "my-github-username" },
     // { id: "google", provider: "Google", account: "my.email@gmail.com" },
-    // { id: "openAi", provider: "OpenAI", account: "openai-account" },
-    // { id: "letterbox", provider: "Letterbox", account: "letterbox-user" },
-    // { id: "pathe", provider: "Pathé", account: "pathe-account" },
-    // { id: "meteoFrance", provider: "Météo France", account: "mf-account" },
   ];
-  const availableCredentials = [ // TODO: requête api
+
+  const availableCredentials = [
     { id: "github", provider: "Github", URILink: "" },
     { id: "google", provider: "Google", URILink: "http://localhost:8080/auth/google/callback" },
     { id: "openAi", provider: "OpenAI", URILink: "" },
@@ -34,6 +33,38 @@ export default function Profile({ goTo }) {
     { id: "pathe", provider: "Pathé", URILink: "" },
     { id: "meteoFrance", provider: "Météo France", URILink: "" },
   ];
+
+  // Stats profil (branchées sur l'API)
+  const [activeWorkflows, setActiveWorkflows] = useState(0);
+  const [executedWorkflows, setExecutedWorkflows] = useState(0);
+
+  useEffect(() => {
+    // Hypothèse : tu as stocké l'user_id après le login (localStorage, context, etc.)
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      console.warn("No user_id found in localStorage, can't fetch areas.");
+      return;
+    }
+
+    const fetchAreas = async () => {
+      try {
+        const areas = await api.getAreasByUserId(userId);
+
+        setActiveWorkflows(Array.isArray(areas) ? areas.length : 0);
+
+        const totalExecuted = (Array.isArray(areas) ? areas : []).reduce(
+          (sum, area) => sum + (area.executed_count ?? 0),
+          0
+        );
+        setExecutedWorkflows(totalExecuted);
+      } catch (error) {
+        console.error("Can't fetch user's areas for profile stats:", error);
+      }
+    };
+
+    fetchAreas();
+  }, []);
+
 
   // Overlay
   const [overlayOpen, setOverlayOpen] = useState(false);
@@ -63,6 +94,7 @@ export default function Profile({ goTo }) {
     setOverlayMode(null);
     setSelectedCredential(null);
   };
+
 
   // Page Profil
   return (
@@ -104,7 +136,7 @@ export default function Profile({ goTo }) {
                 color: colors.textMain,
               }}
             >
-              Username
+              Username {/* TODO: requête api pour récupérer le profil */}
             </h2>
 
             <a
@@ -115,7 +147,7 @@ export default function Profile({ goTo }) {
                 color: colors.textMain,
               }}
             >
-              your.email@area.com
+              your.email@area.com {/* TODO: requête api pour récupérer le profil */}
             </a>
 
             <div
@@ -127,10 +159,12 @@ export default function Profile({ goTo }) {
               }}
             >
               <div>
-                <strong>Active workflows : </strong>2 {/* TODO: requête */}
+                <strong>Active workflows : </strong>
+                {activeWorkflows}
               </div>
               <div>
-                <strong>Workflows executed : </strong>23 {/* TODO: requête */}
+                <strong>Workflows executed : </strong>
+                {executedWorkflows}
               </div>
             </div>
           </div>
@@ -210,7 +244,7 @@ export default function Profile({ goTo }) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              // TODO: requête api
+              // TODO: requête api pour modifier credential
               closeOverlay();
             }}
           >
@@ -240,7 +274,6 @@ export default function Profile({ goTo }) {
                   key={cred.id}
                   onClick={() => {
                     window.open(cred.URILink, "_blank");
-                    // TODO: requête api
                   }}
                 >
                   Connect {cred.provider}

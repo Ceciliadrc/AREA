@@ -1,23 +1,21 @@
-version: "3"
-
 services:
   db: # can change
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
-      - POSTGRES_DB=db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - db-data
+      - db-data:/var/lib/postgresql/data
     networks:
       - back-tier
 
   server: # http://localhost:8080/about.json
     build: ./server
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - back-tier
     ports: # application server on port 8080
@@ -26,7 +24,7 @@ services:
       - db
 
   client_mobile:
-    build: ./mobile
+    build: ./Mobile
     volumes: # The services client_mobile and client_web will share a common volume
       - common:/apk # normalement ce truc marche (par pitié, y a 0 doc)
     depends_on:
@@ -41,6 +39,8 @@ services:
     depends_on: # The client_web depends on client_mobile AND server.
       - server
       - client_mobile
+    networks:
+      - back-tier
 
 networks:
   back-tier: {}

@@ -19,6 +19,8 @@ import GoogleLogo from "../assets/google.png";
 import GithubLogo from "../assets/github.png";
 import FacebookLogo from "../assets/facebook.png";
 
+import api from "../apiFetcher/api.js";
+
 export default function Login({ goTo }) {
   return (
     <CenteredCardLayout width={420}>
@@ -27,15 +29,27 @@ export default function Login({ goTo }) {
 
       <div style={{ marginTop: 24 }}>
         <form
-          onSubmit={(e) => {
-            // TODO: requête api
+          onSubmit={async (e) => {
             e.preventDefault();
-            goTo("profile");
+
+            const formData = new FormData(e.target);
+            const email = formData.get("email");
+            const password = formData.get("password");
+
+            try {
+              await api.login(email, password); // POST /auth/login
+              goTo("profile");
+            } catch (error) {
+              console.error("Login failed:", error);
+              // TODO: afficher un message d'erreur propre dans l'UI
+              alert("Login failed, please check your credentials.");
+            }
           }}
         >
           <TextInput
             label="Email"
             type="email"
+            name="email"
             placeholder="your.email@area.com"
             style={{ width: "95%", backgroundColor: "white" }}
             required
@@ -44,6 +58,7 @@ export default function Login({ goTo }) {
           <TextInput
             label="Password"
             type="password"
+            name="password"
             placeholder="********"
             style={{ width: "95%", backgroundColor: "white" }}
             required
@@ -83,7 +98,7 @@ export default function Login({ goTo }) {
           login with
         </p>
 
-        {/* Boutons connexion google etc */}
+        {/* Boutons connexion social (non branchés pour l'instant) */}
         <div
           style={{
             display: "flex",
@@ -91,9 +106,28 @@ export default function Login({ goTo }) {
             marginBottom: 20,
           }}
         >
-          <SocialButton iconSrc={GoogleLogo} alt="Login with Google" />
-          <SocialButton iconSrc={GithubLogo} alt="Login with Github" />
-          <SocialButton iconSrc={FacebookLogo} alt="Login with Facebook" />
+          <SocialButton
+            iconSrc={GoogleLogo}
+            alt="Login with Google"
+            onClick={() => {
+              // TODO: implémenter plus tard /auth/google si besoin
+              console.log("Social login not implemented yet");
+            }}
+          />
+          <SocialButton
+            iconSrc={GithubLogo}
+            alt="Login with Github"
+            onClick={() => {
+              console.log("Social login not implemented yet");
+            }}
+          />
+          <SocialButton
+            iconSrc={FacebookLogo}
+            alt="Login with Facebook"
+            onClick={() => {
+              console.log("Social login not implemented yet");
+            }}
+          />
         </div>
 
         <DividerWithText>or</DividerWithText>

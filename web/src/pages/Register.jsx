@@ -18,6 +18,8 @@ import GoogleLogo from "../assets/google.png";
 import GithubLogo from "../assets/github.png";
 import FacebookLogo from "../assets/facebook.png";
 
+import api from "../apiFetcher/api.js";
+
 export default function Register({ goTo }) {
   return (
     <CenteredCardLayout width={420}>
@@ -26,15 +28,28 @@ export default function Register({ goTo }) {
 
       <div style={{ marginTop: 24 }}>
         <form
-          onSubmit={(e) => {
-            // TODO: requête api
+          onSubmit={async (e) => {
             e.preventDefault();
-            goTo("profile");
+
+            const formData = new FormData(e.target);
+            const username = formData.get("username");
+            const email = formData.get("email");
+            const password = formData.get("password");
+
+            try {
+              const data = await api.register(username, email, password);
+
+              goTo("profile");
+            } catch (error) {
+              console.error("Register failed:", error);
+              alert("Registration failed, please try again.");
+            }
           }}
         >
           <TextInput
             label="Username"
-            type="username"
+            type="text"
+            name="username"
             placeholder="JohnDoe"
             style={{ width: "95%", backgroundColor: "white" }}
             required
@@ -42,6 +57,7 @@ export default function Register({ goTo }) {
           <TextInput
             label="Email"
             type="email"
+            name="email"
             placeholder="your.email@area.com"
             style={{ width: "95%", backgroundColor: "white" }}
             required
@@ -49,6 +65,7 @@ export default function Register({ goTo }) {
           <TextInput
             label="Password"
             type="password"
+            name="password"
             placeholder="********"
             style={{ width: "95%", backgroundColor: "white" }}
             required
@@ -66,7 +83,7 @@ export default function Register({ goTo }) {
           >
           </div>
 
-          <br></br>
+          <br />
 
           <PrimaryButton type="submit">
             Register →
@@ -86,7 +103,7 @@ export default function Register({ goTo }) {
           Register with
         </p>
 
-        {/* Boutons connexion google etc */}
+        {/* Boutons connexion google etc (non branchés pour l'instant) */}
         <div
           style={{
             display: "flex",
@@ -94,14 +111,26 @@ export default function Register({ goTo }) {
             marginBottom: 20,
           }}
         >
-          <SocialButton iconSrc={GoogleLogo} alt="Register with Google" />
-          <SocialButton iconSrc={GithubLogo} alt="Register with Github" />
-          <SocialButton iconSrc={FacebookLogo} alt="Register with Facebook" />
+          <SocialButton
+            iconSrc={GoogleLogo}
+            alt="Register with Google"
+            onClick={() => console.log("Social register not implemented yet")}
+          />
+          <SocialButton
+            iconSrc={GithubLogo}
+            alt="Register with Github"
+            onClick={() => console.log("Social register not implemented yet")}
+          />
+          <SocialButton
+            iconSrc={FacebookLogo}
+            alt="Register with Facebook"
+            onClick={() => console.log("Social register not implemented yet")}
+          />
         </div>
 
         <DividerWithText>or</DividerWithText>
 
-        {/* Bouton Login */}
+        {/* Bouton Register */}
         <p
           style={{
             textAlign: "center",
@@ -113,7 +142,7 @@ export default function Register({ goTo }) {
           Already have an account ?{" "}
           <TextButton
             onClick={() => {
-              goTo("login")
+              goTo("login");
             }}
             style={{ fontWeight: "bold" }}
           >

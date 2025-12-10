@@ -8,7 +8,6 @@
 import { useState } from "react";
 import Login from "./pages/Login";
 import WorkflowResume from "./pages/WorkflowResume";
-import ComponentsTest from "./pages/ComponentsTest";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import WorkflowCreation from "./pages/workflowCreation/WorkflowCreation";
