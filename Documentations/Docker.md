@@ -47,7 +47,7 @@ networks:
 
 **Purpose :** FastAPI/Uvicorn backend server handling API requests.
 
-**Dockerfile :** [See the Dockerfile](./server/Dockerfile)
+**Dockerfile :** [See the Dockerfile](../server/Dockerfile)
 
 **Exposed Port :** 8080
 
@@ -64,7 +64,7 @@ networks:
 
 **Purpose :** Builds Android APK file for mobile distribution.
 
-**Dockerfile :** [See the Dockerfile](./mobile/Dockerfile)
+**Dockerfile :** [See the Dockerfile](../mobile/Dockerfile)
 
 **Description :**
 - Uses Android SDK 34
@@ -84,7 +84,7 @@ networks:
 
 **Purpose :** Serves React/Vite web application and provides APK download.
 
-**Dockerfile :** [See the Dockerfile](./web/Dockerfile)
+**Dockerfile :** [See the Dockerfile](../web/Dockerfile)
 
 **Exposed Port :** 8081
 
