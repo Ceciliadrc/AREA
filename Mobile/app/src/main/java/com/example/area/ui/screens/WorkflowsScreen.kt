@@ -10,6 +10,4 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun WorkflowsScreen (
     modifier: Modifier = Modifier,
-    onNavigateToProfile: () -> Unit = {},
-    onNavigateToActions: () -> Unit = {}
 ) {}

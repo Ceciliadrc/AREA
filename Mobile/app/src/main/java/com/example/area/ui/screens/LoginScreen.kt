@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -44,6 +45,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.area.ui.theme.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.area.data.repository.AuthRepository
+import androidx.compose.material3.CircularProgressIndicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -56,7 +63,10 @@ fun LoginScreen (
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val authRepository = remember { AuthRepository(context) }
 
     Box(
         modifier = Modifier
@@ -173,9 +183,19 @@ fun LoginScreen (
             Button(
                 onClick = {
                     if (email.isNotEmpty() && password.isNotEmpty()) {
-                        Toast.makeText(context, "Logging in...", Toast.LENGTH_SHORT).show()
-                        // TODO: API CALLLLLLLLLL
-                        onLoginSuccess()
+                        isLoading = true
+                        scope.launch {
+                            val result = authRepository.login(email, password)
+                            isLoading = false
+
+                            if (result.isSuccess) {
+                                Toast.makeText(context, result.getOrNull(), Toast.LENGTH_SHORT).show()
+                                onLoginSuccess()
+                            } else {
+                                Toast.makeText(context, "Login failed: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+
+                            }
+                        }
                     } else {
                         Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                     }
@@ -195,13 +215,20 @@ fun LoginScreen (
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
                 ),
-                shape = MaterialTheme.shapes.medium
+                enabled = !isLoading
             ) {
-                Text(
-                    text = "Login →",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                } else {
+                    Text(
+                        text = "Login →",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))

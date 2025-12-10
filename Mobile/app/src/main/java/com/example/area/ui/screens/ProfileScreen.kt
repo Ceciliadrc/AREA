@@ -6,11 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -32,8 +28,6 @@ import com.example.area.ui.theme.*
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     onEditProfile: () -> Unit = {},
-    onNavigateToWorkflows: () -> Unit = {},
-    onNavigateToActions: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -114,7 +108,7 @@ fun ProfileScreen(
                 ) {
                     StatsCard(
                         title = "Active workflows",
-                        value = "2",
+                        value = "X",
                         color1 = Blossom,
                         color2 = Peony,
                         modifier = Modifier.weight(1f)
@@ -122,14 +116,14 @@ fun ProfileScreen(
 
                     StatsCard(
                         title = "Workflows executed",
-                        value = "23",
+                        value = "X",
                         color1 = Mauve,
                         color2 = Graphite,
                         modifier = Modifier.weight(1f)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 Text(
                     text = "Connected Services",
@@ -144,7 +138,7 @@ fun ProfileScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp)
+                        .height(120.dp)
                         .background(
                             color = Color.White.copy(alpha = 0.2f),
                             shape = MaterialTheme.shapes.medium

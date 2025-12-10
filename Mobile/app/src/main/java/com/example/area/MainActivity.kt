@@ -6,17 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,10 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.area.ui.screens.*
-import com.example.area.ui.theme.AreaTheme
-import com.example.area.ui.theme.Blossom
-import com.example.area.ui.theme.Mauve
-import com.example.area.ui.theme.Peony
+import com.example.area.ui.theme.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +64,7 @@ fun AppContent() {
             LoginScreen(
                 onLoginSuccess = {
                     isLoggedIn = true
-                    navController.navigate("profile") {
+                    navController.navigate("main") {
                         popUpTo("login") { inclusive = true }
                     }
                 },
@@ -89,10 +76,9 @@ fun AppContent() {
 
         composable("main") {
             MainAppScreen(
-                navController = navController,
                 onLogout = {
                     isLoggedIn = false
-                    navController.navigate("main") {
+                    navController.navigate("login") {
                         popUpTo("main") { inclusive = true }
                     }
                 }
@@ -100,14 +86,28 @@ fun AppContent() {
         }
 
         composable("register") {
-            Text("Register Screen - TODO")
+            RegisterScreen(
+                onRegisterSuccess = {
+                    // After successful registration
+                    isLoggedIn = true
+                    navController.navigate("main") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.navigate("login") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
 
 @Composable
-fun MainAppScreen(navController: NavHostController, onLogout: () -> Unit) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+fun MainAppScreen(onLogout: () -> Unit) {
+    val innerNavController = rememberNavController()
+    val navBackStackEntry by innerNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: "profile"
 
     val showBottomNav = when (currentRoute) {
@@ -117,13 +117,13 @@ fun MainAppScreen(navController: NavHostController, onLogout: () -> Unit) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         NavHost(
-            navController = navController,
+            navController = innerNavController,
             startDestination = "profile",
             modifier = Modifier.fillMaxSize()
         ) {
             composable("profile") {
                 ProfileScreen(
-                    onEditProfile = { navController.navigate("editProfile") }
+                    onEditProfile = { innerNavController.navigate("editProfile") }
                 )
             }
 
@@ -151,18 +151,18 @@ fun MainAppScreen(navController: NavHostController, onLogout: () -> Unit) {
                 BottomNavBar(
                     currentRoute = currentRoute,
                     onWorkflowsClick = {
-                        navController.navigate("workflows") {
+                        innerNavController.navigate("workflows") {
                             // Single top - prevents multiple copies
                             launchSingleTop = true
                         }
                     },
                     onActionsClick = {
-                        navController.navigate("actions") {
+                        innerNavController.navigate("actions") {
                             launchSingleTop = true
                         }
                     },
                     onProfileClick = {
-                        navController.navigate("profile") {
+                        innerNavController.navigate("profile") {
                             launchSingleTop = true
                         }
                     }
@@ -191,7 +191,7 @@ fun BottomNavBar(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(80.dp),
+            .height(75.dp),
         color = Color.Transparent,
         shadowElevation = 8.dp
     ) {
@@ -204,19 +204,17 @@ fun BottomNavBar(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp)
+                    .height(80.dp)
                     .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                     .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(Blossom, Peony, Mauve)
-                        )
+                        color = Mauve
                     )
             )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp)
+                    .height(80.dp)
                     .padding(horizontal = 32.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -281,13 +279,6 @@ fun NavButton(
                     Brush.linearGradient(
                         colors = listOf(gradientStart, gradientEnd)
                     )
-                    /*if (isSelected) {
-                        Brush.linearGradient(
-                            colors = listOf(gradientStart, gradientEnd)
-                        )
-                    } else {
-                        Color.Transparent
-                    }*/
                 ),
             contentAlignment = Alignment.Center
         ) {
@@ -298,14 +289,5 @@ fun NavButton(
                 modifier = Modifier.size(if (isSelected) 26.dp else 22.dp)
             )
         }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = if (isSelected) Color.White else Color.White.copy(alpha = 0.8f),
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-        )
     }
 }
