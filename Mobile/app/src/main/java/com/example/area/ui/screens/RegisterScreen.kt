@@ -229,12 +229,15 @@ fun RegisterScreen(
                                 val result = authRepository.register(username, email, password)
                                 isLoading = false
                                 if (result.isSuccess) {
-                                    Toast.makeText(context, result.getOrNull(), Toast.LENGTH_SHORT).show()
+                                    val userResponse = result.getOrNull()
+                                    val message = userResponse?.message ?: "Registration successful!"
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                    onRegisterSuccess()
                                 } else {
-                                    Toast.makeText(context, "Registration failed: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                                    val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+                                    Toast.makeText(context, "Registration failed: $errorMessage", Toast.LENGTH_SHORT).show()
                                 }
                             }
-                            onRegisterSuccess()
                         }
                     },
                     modifier = Modifier

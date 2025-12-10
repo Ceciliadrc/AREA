@@ -189,11 +189,15 @@ fun LoginScreen (
                             isLoading = false
 
                             if (result.isSuccess) {
-                                Toast.makeText(context, result.getOrNull(), Toast.LENGTH_SHORT).show()
-                                onLoginSuccess()
+                                val userResponse = result.getOrNull()
+                                if (userResponse?.error != null) {
+                                    Toast.makeText(context, userResponse.error, Toast.LENGTH_SHORT).show()
+                                } else {
+                                    val message = userResponse?.message ?: "Login successful!"
+                                }
                             } else {
-                                Toast.makeText(context, "Login failed: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
-
+                                val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+                                Toast.makeText(context, "Login failed: $errorMessage", Toast.LENGTH_SHORT).show()
                             }
                         }
                     } else {
