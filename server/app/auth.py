@@ -1,44 +1,44 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from urllib.parse import urlencode
-from app import models, database, security, schemas
-
+from app import models, database, security
+from app.schemas import UserRegister, UserLogin
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-@router.post("/register", response_model=schemas.UserResponse)
-def register(username: str, email: str, password: str, db: Session = Depends(database.get_db)):
-
-    if db.query(models.User).filter(models.User.email == email).first():
-        return {"error": "Email already use"}
+@router.post("/register")
+def register(user_data: UserRegister, db: Session = Depends(database.get_db)):
+    if db.query(models.User).filter(models.User.email == user_data.email).first():
+        return {"error": "Email already in use"}
     
-    hashed = security.hash_password(password)
+    hashed = security.hash_password(user_data.password)
     
-    new_user = models.User(
-        username=username,
-        email=email,
+    user = models.User(
+        username=user_data.username,
+        email=user_data.email,
         password=hashed
     )
-    db.add(new_user)
+    
+    db.add(user)
     db.commit()
-    db.refresh(new_user)
-
+    db.refresh(user)
+    
     return {
+        "success": True,
         "message": "Registration successful",
-        "user_id": new_user.id,
-        "username": new_user.username
+        "user_id": user.id,
+        "username": user.username
     }
 
-@router.post("/login", response_model=schemas.UserResponse)
-def login(email: str, password: str, db: Session = Depends(database.get_db)):
+@router.post("/login")
+def login(user_data: UserLogin, db: Session = Depends(database.get_db)):
 
-    user = security.authenticate_user(db, email, password)
+    user = security.authenticate_user(db, user_data.email, user_data.password)
     
     if not user:
-        return {"error": "Email or password incorect"}
+        return {"error": "Email or password incorrect"}
     
     return {
+        "success": True,
         "message": "Login successful",
         "user_id": user.id,
         "username": user.username
