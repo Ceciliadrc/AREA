@@ -38,17 +38,17 @@ async def about(db: Session = Depends(database.get_db)):
         actions = db.query(models.Action).filter(models.Action.service_id == service.id).all()
         reactions = db.query(models.Reaction).filter(models.Reaction.service_id == service.id).all()
     
-    services_data.append({
-            "name": service.name,
-            "actions": [
-                {"name": action.name}
-                for action in actions
-            ],
-            "reactions": [
-                {"name": reaction.name}
-                for reaction in reactions
-            ]
-        })
+        services_data.append({
+                "name": service.name,
+                "actions": [
+                    {"name": action.name}
+                    for action in actions
+                ],
+                "reactions": [
+                    {"name": reaction.name}
+                    for reaction in reactions
+                ]
+            })
 
     return {
         "client": {"host": "127.0.0.1"},
