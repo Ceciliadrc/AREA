@@ -1,23 +1,21 @@
-from sqlalchemy.orm import Session 
+import bcrypt
+from sqlalchemy.orm import Session
 from . import models
 
 def hash_password(password: str) -> str:
-    return password
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode(), salt)
+    return hashed.decode()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return plain_password == hashed_password
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
 def authenticate_user(db: Session, email: str, password: str):
     user = db.query(models.User).filter(models.User.email == email).first()
-    
+
     if not user:
-        print(f"User {email} not found")
         return None
     
     if verify_password(password, user.password):
-        print(f"Authentication successful for {email}")
         return user
-    
-    print("Password incorrect")
     return None
-#brycpt a ajouter
