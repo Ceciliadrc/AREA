@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional, List
 
 class UserBase(BaseModel):
     username: str
@@ -39,5 +40,26 @@ class AreaResponse(UserBase):
     action_id: int
     reaction_id: int
     
+    class Config:
+        from_attributes = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: int
+    username: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+class ServiceBase(BaseModel):
+    name: str
+    display_name: str
+
+class ServiceResponse(ServiceBase):
+    id: int
+    action: List[str] = []
+    reaction: List[str] = []
+
     class Config:
         from_attributes = True
