@@ -1,7 +1,7 @@
 import bcrypt
 from sqlalchemy.orm import Session
 from . import models, database
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
@@ -37,7 +37,7 @@ def authenticate_user(db: Session, email: str, password: str):
 def create_access(data: dict, expires_delta: Optional[timedelta] = None):
     encode = data.copy()
     if expires_delta:
-        expire = datetime.now() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now() + timedelta(minutes= 60 * 24)
     encode.update({"exp": expire})

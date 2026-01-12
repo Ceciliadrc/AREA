@@ -6,10 +6,9 @@ from .auth import router as auth_router
 from .areas import router as areas_router
 from .services import router as services_router
 from sqlalchemy import exc
-from app.hook import hook
-import security
 from security import active_user
 from typing import Annotated
+# from app.hook import hook
 
 def wait_for_db():
     for _ in range(10):
@@ -22,8 +21,8 @@ def wait_for_db():
 
 if wait_for_db():
     models.Base.metadata.create_all(bind=database.engine)
-    hook.start()
-    print("hook démarré")
+    # hook.start()
+    # print("hook démarré")
 
 app = FastAPI()
 
