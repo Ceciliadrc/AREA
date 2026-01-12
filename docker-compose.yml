@@ -24,9 +24,9 @@ services:
       - db
 
   client_mobile:
-    build: mobile
+    build: ./mobile
     volumes: # The services client_mobile and client_web will share a common volume
-      - common:/apk # normalement ce truc marche (par pitié, y a 0 doc)
+      - common:/apk
     depends_on:
       - server
 
