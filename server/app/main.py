@@ -6,9 +6,13 @@ from .auth import router as auth_router
 from .areas import router as areas_router
 from .services import router as services_router
 from sqlalchemy import exc
-from security import active_user
-from typing import Annotated
 # from app.hook import hook
+from .authSpotify import router as spotify_auth_router
+# from .authGoogle import router as google_auth_router
+# from .authTwitch import router as twitch_auth_router
+# from .authNotion import router as notion_auth_router
+# from .authInsta import router as insta_auth_router
+from .init_all_services import init_services
 
 def wait_for_db():
     for _ in range(10):
@@ -20,15 +24,22 @@ def wait_for_db():
     return False
 
 if wait_for_db():
-    models.Base.metadata.create_all(bind=database.engine)
+   models.Base.metadata.create_all(bind=database.engine)
+   init_services()
     # hook.start()
     # print("hook démarré")
 
 app = FastAPI()
 
+
 app.include_router(auth_router)
 app.include_router(areas_router)
 app.include_router(services_router)
+app.include_router(spotify_auth_router)
+# app.include_router(google_auth_router)
+# app.include_router(twitch_auth_router)
+# app.include_router(notion_auth_router)
+# app.include_router(insta_auth_router)
 
 @app.get("/")
 async def root():
@@ -63,11 +74,3 @@ async def about(db: Session = Depends(database.get_db)):
             "services": services_data
         }
     }
-
-user_dependency = Annotated[dict, Depends(active_user)]
-
-@app.get("/me", status_code=status.HTTP_200_OK)
-async def user(user: user_dependency, db:Session = Depends(database.get_db)):
-    if user is None:
-        raise HTTPException(status_code=401, detail='Authentification failed')
-    return {"User": user}

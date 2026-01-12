@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
-from database import Base
+from .database import Base
 from sqlalchemy.orm import relationship
 
 class User(Base):
@@ -9,6 +9,7 @@ class User(Base):
     username = Column(String, unique=True)
     email = Column(String, unique=True, index=True)
     password = Column(String)
+    role = Column(String, default="user")
 
 class Service(Base):
     __tablename__ = "services"
@@ -38,6 +39,7 @@ class Area(Base):
     user_id = Column(Integer, ForeignKey("users.id")) # lien vers quel utilisateur possède cet AREA
     action_id = Column(Integer, ForeignKey("actions.id")) # l'action qui declenche
     reaction_id = Column(Integer, ForeignKey("reactions.id")) # reaction a executer
+    parameters = Column(String, nullable=True)
 
 class ServiceOauth(Base):
     __tablename__ = "service_oauth"

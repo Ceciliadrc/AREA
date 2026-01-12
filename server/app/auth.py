@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app import models, database, security
 from app.schemas import UserRegister, UserLogin
@@ -81,3 +81,37 @@ def verify_token(token: str):
             detail="Invalid token"
         )
     return {"valid": True, "email": decode.get("sub")}
+
+@router.get("/me", status_code=status.HTTP_200_OK)
+def get_current_user(current_user: models.User = Depends(security.active_user)):
+    return {
+        "id": current_user.id,
+        "username": current_user.username,
+        "email": current_user.email,
+        "role": current_user.role
+    }
+
+@router.get("/me/role")
+def get_my_role(current_user: models.User = Depends(security.active_user)):
+    return {
+        "user_id": current_user.id,
+        "role": current_user.role or "user",
+        "is_admin": (current_user.role == "admin")
+        if current_user.role
+            else False
+    }
+
+@router.put("/users/{user_id}/role")
+def update_user_role(user_id: int, new_role: str, db: Session = Depends(database.get_db)):
+
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(404, "User not found")
+
+    valid_roles = ["user", "admin"]
+    if new_role not in valid_roles:
+        raise HTTPException(400, f"Role not valid")
+
+    user.role = new_role
+    db.commit()
+    return {"message": f"User {user_id} role updated to {new_role}"}
