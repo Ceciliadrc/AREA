@@ -1,15 +1,13 @@
 import bcrypt
 from sqlalchemy.orm import Session
-from . import models
-from sqlalchemy.orm import Session
 from . import models, database
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 import os
 from dotenv import load_dotenv
+from fastapi import HTTPException, status, Depends
 
 load_dotenv()
 
