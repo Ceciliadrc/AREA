@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, status, HTTPException
 import time
 from app import models, database
 from sqlalchemy.orm import Session
@@ -7,6 +7,9 @@ from .areas import router as areas_router
 from .services import router as services_router
 from sqlalchemy import exc
 from app.hook import hook
+import security
+from security import active_user
+from typing import Annotated
 
 def wait_for_db():
     for _ in range(10):
@@ -61,3 +64,11 @@ async def about(db: Session = Depends(database.get_db)):
             "services": services_data
         }
     }
+
+user_dependency = Annotated[dict, Depends(active_user)]
+
+@app.get("/me", status_code=status.HTTP_200_OK)
+async def user(user: user_dependency, db:Session = Depends(database.get_db)):
+    if user is None:
+        raise HTTPException(status_code=401, detail='Authentification failed')
+    return {"User": user}
