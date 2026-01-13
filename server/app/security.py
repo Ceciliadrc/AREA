@@ -74,3 +74,8 @@ def get_user(token: str = Depends(oauth2), db: Session = Depends(database.get_db
 
 def active_user(current_user: models.User = Depends(get_user)):
     return current_user
+
+def require_admin(current_user: models.User = Depends(active_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin required")
+    return current_user
