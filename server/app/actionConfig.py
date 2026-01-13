@@ -127,9 +127,6 @@ REACTION_CONFIGS = {
         }
     },
     "twitch": {
-        "suggest_live_to_watch": {
-            "fields": []
-        },
         "suggest_random_stream": {
             "fields": []
         }
