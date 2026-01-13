@@ -74,9 +74,6 @@ ACTION_CONFIGS = {
                 }
             ]
         },
-        "important_email": {
-            "fields": []
-        }
     }
 }
 

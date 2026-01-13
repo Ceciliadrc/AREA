@@ -12,7 +12,6 @@ import httpx
 from urllib.parse import urlencode
 from app import oauthDbConfig, models, database, security, schemas
 
-
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -20,7 +19,7 @@ SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 SPOTIFY_ME_URL = "https://api.spotify.com/v1/me"
 
 @router.get("/spotify/login")
-def logWithSpotify(db: Session = Depends(database.get_db)):
+def logWithSpotify(user_id: int, db: Session = Depends(database.get_db)):
     config = oauthDbConfig.OauthDbConfig.get_service(db, "spotify")
     if not config:
         raise HTTPException(500, "Spotify oauth not configured")
@@ -30,6 +29,7 @@ def logWithSpotify(db: Session = Depends(database.get_db)):
         "redirect_uri": config.redirect_uri,
         "response_type": "code",
         "scope": "user-read-email",
+        "state": str(user_id)
     }
 
     spotify_url = f"{SPOTIFY_AUTH_URL}?{urlencode(params)}"
@@ -38,10 +38,12 @@ def logWithSpotify(db: Session = Depends(database.get_db)):
 
 
 @router.get("/spotify/callback")
-async def spotify_callback(code: str, user_id: int, db: Session = Depends(database.get_db)):
+async def spotify_callback(code: str, state: str, db: Session = Depends(database.get_db)):
     config = oauthDbConfig.OauthDbConfig.get_service(db, "spotify")
     if not config:
         raise HTTPException(500, "Spotify oauth not configured")
+    
+    user_id = int(state)
 
     async with httpx.AsyncClient() as client:
         res = await client.post(
