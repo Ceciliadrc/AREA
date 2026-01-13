@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey
 from .database import Base
 from sqlalchemy.orm import relationship
 
@@ -24,12 +24,14 @@ class Action(Base):
     id = Column(Integer, primary_key=True, index=True)
     service_id = Column(Integer, ForeignKey("services.id")) # lien vers service
     name = Column(String, nullable=False) # nom de l'action
+    description = Column(String)
 
 class Reaction(Base):
     __tablename__ = "reactions"
     id = Column(Integer, primary_key=True, index=True)
     service_id = Column(Integer, ForeignKey("services.id"))
     name = Column(String, nullable=False)  # nom de la reaction
+    description = Column(String)
 
 class Area(Base):
     __tablename__ = "areas"

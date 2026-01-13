@@ -11,26 +11,15 @@ def register(user_data: UserRegister, db: Session = Depends(database.get_db)):
 
     existing_email = db.query(models.User).filter(models.User.email == user_data.email).first()
     if existing_email:
-        raise HTTPException(
-            status_code=400,
-            detail="Email already use"
-        )
+        raise HTTPException(status_code=400, detail="Email already use")
 
     existing_user = db.query(models.User).filter(models.User.username == user_data.username).first()
     if existing_user:
-        raise HTTPException(
-            status_code=400,
-            detail="Username already use"
-        )
+        raise HTTPException(status_code=400, detail="Username already use")
 
     hashed = security.hash_password(user_data.password)
 
-    user = models.User(
-        username=user_data.username,
-        email=user_data.email,
-        password=hashed
-    )
-
+    user = models.User(username=user_data.username, email=user_data.email, password=hashed)
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -40,7 +29,6 @@ def register(user_data: UserRegister, db: Session = Depends(database.get_db)):
         data={"sub": user.email},
         expires_delta=token_expire
     )
-
     return {
         "access_token": access_token,
         "token_type": "bearer",
@@ -54,17 +42,13 @@ def login(user_data: UserLogin, db: Session = Depends(database.get_db)):
     user = security.authenticate_user(db, user_data.email, user_data.password)
 
     if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid email or password"
-        )
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
     token_expire = timedelta(minutes= 60 * 24)
     access_token = security.create_access(
         data={"sub": user.email},
         expires_delta=token_expire
     )
-
     return {
         "access_token": access_token,
         "token_type": "bearer",
@@ -100,6 +84,31 @@ def get_my_role(current_user: models.User = Depends(security.active_user)):
         if current_user.role
             else False
     }
+
+@router.get("/users/", dependencies= [Depends(security.require_admin)])
+def get_all_users(db: Session = Depends(database.get_db)):
+    users = db.query(models.User).all()
+    return users
+
+@router.get("/users/{user_id}")
+def get_user(user_id: int, db: Session = Depends(database.get_db), current_user: models.User = Depends(security.active_user)):
+    if current_user.id != user_id and current_user.role != "admin":
+        raise HTTPException(403, "Not authorized")
+    
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(404, "User not found")
+    return user
+
+@router.delete("/users/{user_id}", dependencies=[Depends(security.require_admin)])
+def delete_user(user_id: int, db: Session = Depends(database.get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(404, "User not found")
+    
+    db.delete(user)
+    db.commit()
+    return {"message": f"User {user_id} deleted"}
 
 @router.put("/users/{user_id}/role")
 def update_user_role(user_id: int, new_role: str, db: Session = Depends(database.get_db)):

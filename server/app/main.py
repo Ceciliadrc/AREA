@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, status, HTTPException
+from fastapi import FastAPI, Depends
 import time
 from app import models, database
 from sqlalchemy.orm import Session
@@ -8,8 +8,8 @@ from .services import router as services_router
 from sqlalchemy import exc
 # from app.hook import hook
 from .authSpotify import router as spotify_auth_router
-# from .authGoogle import router as google_auth_router
-# from .authTwitch import router as twitch_auth_router
+from .authGoogle import router as google_auth_router
+from .authTwitch import router as twitch_auth_router
 # from .authNotion import router as notion_auth_router
 # from .authInsta import router as insta_auth_router
 from .init_all_services import init_services
@@ -26,8 +26,8 @@ def wait_for_db():
 if wait_for_db():
    models.Base.metadata.create_all(bind=database.engine)
    init_services()
-    # hook.start()
-    # print("hook démarré")
+#    hook.start()
+#    print("hook démarré")
 
 app = FastAPI()
 
@@ -36,8 +36,8 @@ app.include_router(auth_router)
 app.include_router(areas_router)
 app.include_router(services_router)
 app.include_router(spotify_auth_router)
-# app.include_router(google_auth_router)
-# app.include_router(twitch_auth_router)
+app.include_router(google_auth_router)
+app.include_router(twitch_auth_router)
 # app.include_router(notion_auth_router)
 # app.include_router(insta_auth_router)
 
@@ -58,11 +58,17 @@ async def about(db: Session = Depends(database.get_db)):
         services_data.append({
                 "name": service.name,
                 "actions": [
-                    {"name": action.name}
+                    {
+                    "name": action.name,
+                    "description": action.description
+                    }
                     for action in actions
                 ],
                 "reactions": [
-                    {"name": reaction.name}
+                    {
+                    "name": reaction.name,
+                    "description": reaction.description
+                    }
                     for reaction in reactions
                 ]
             })
