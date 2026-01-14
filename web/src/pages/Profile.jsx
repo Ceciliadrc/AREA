@@ -20,7 +20,8 @@ import { colors } from "../components/theme";
 import api from "../apiFetcher/api.js";
 
 export default function Profile({ goTo }) {
-  const credentials = [ // TODO: requête api qui récupère tous les services auquels on est connectés
+  const credentials = [
+    // TODO: requête api qui récupère tous les services auquels on est connectés -- oui elle y est
     // { id: "github", provider: "Github", account: "my-github-username" },
     // { id: "google", provider: "Google", account: "my.email@gmail.com" },
   ];
@@ -34,12 +35,13 @@ export default function Profile({ goTo }) {
     { id: "meteoFrance", provider: "Météo France", URILink: "" },
   ];
 
-  // Stats profil (branchées sur l'API)
+  // Stats profil
   const [activeWorkflows, setActiveWorkflows] = useState(0);
   const [executedWorkflows, setExecutedWorkflows] = useState(0);
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
-    // Hypothèse : tu as stocké l'user_id après le login (localStorage, context, etc.)
     const userId = localStorage.getItem("user_id");
     if (!userId) {
       console.warn("No user_id found in localStorage, can't fetch areas.");
@@ -65,10 +67,25 @@ export default function Profile({ goTo }) {
     fetchAreas();
   }, []);
 
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const isAdmin = {
+          role: "admin", // TODO: remplacer par vraie requête -- oui y est
+        };
+
+        setIsAdmin(isAdmin.role === "admin");
+      } catch (e) {
+        console.error("Can't fetch user role", e);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
 
   // Overlay
   const [overlayOpen, setOverlayOpen] = useState(false);
-  const [overlayMode, setOverlayMode] = useState(null); // view/edit/add
+  const [overlayMode, setOverlayMode] = useState(null);
   const [selectedCredential, setSelectedCredential] = useState(null);
 
   const openViewOverlay = (cred) => {
@@ -95,8 +112,6 @@ export default function Profile({ goTo }) {
     setSelectedCredential(null);
   };
 
-
-  // Page Profil
   return (
     <AppLayout>
       <div
@@ -111,7 +126,7 @@ export default function Profile({ goTo }) {
       >
         <PageTitle>My profile</PageTitle>
 
-        {/* Bloc profil : photo + infos */}
+        {/* Profil */}
         <div
           style={{
             display: "flex",
@@ -122,12 +137,8 @@ export default function Profile({ goTo }) {
             marginBottom: 60,
           }}
         >
-          {/* Photo de profil */}
-          <div>
-            <ProfilePicture size={170} />
-          </div>
+          <ProfilePicture size={170} />
 
-          {/* Infos utilisateur */}
           <div style={{ textAlign: "left" }}>
             <h2
               style={{
@@ -136,7 +147,7 @@ export default function Profile({ goTo }) {
                 color: colors.textMain,
               }}
             >
-              Username {/* TODO: requête api pour récupérer le profil */}
+              Username
             </h2>
 
             <a
@@ -147,7 +158,7 @@ export default function Profile({ goTo }) {
                 color: colors.textMain,
               }}
             >
-              your.email@area.com {/* TODO: requête api pour récupérer le profil */}
+              your.email@area.com
             </a>
 
             <div
@@ -166,11 +177,23 @@ export default function Profile({ goTo }) {
                 <strong>Workflows executed : </strong>
                 {executedWorkflows}
               </div>
+
+              {isAdmin && (
+                <div style={{ marginTop: 16 }}>
+                  <PrimaryButton
+                    onClick={() => {
+                      if (goTo) goTo("adminPanel");
+                    }}
+                  >
+                    Admin panel
+                  </PrimaryButton>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Section Credentials */}
+        {/* Credentials */}
         <h2
           style={{
             fontSize: 26,
@@ -202,24 +225,18 @@ export default function Profile({ goTo }) {
               <CredentialCard
                 key={cred.id}
                 label={cred.provider}
-                onClick={() => openViewOverlay(cred)}   // clic sur la card = détails
-                onEdit={() => openEditOverlay(cred)}    // clic sur le crayon = édition
+                onClick={() => openViewOverlay(cred)}
+                onEdit={() => openEditOverlay(cred)}
               />
             ))}
 
-            <CredentialCard
-              isAdd
-              onClick={openAddOverlay}
-            />
+            <CredentialCard isAdd onClick={openAddOverlay} />
           </div>
         </div>
       </div>
 
-      <Overlay
-        isOpen={overlayOpen}
-        onClose={closeOverlay}
-        width={460}
-      >
+      {/* Overlay */}
+      <Overlay isOpen={overlayOpen} onClose={closeOverlay} width={460}>
         <h2
           style={{
             marginTop: 0,
@@ -244,7 +261,6 @@ export default function Profile({ goTo }) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              // TODO: requête api pour modifier credential
               closeOverlay();
             }}
           >
@@ -272,9 +288,7 @@ export default function Profile({ goTo }) {
               {availableCredentials.map((cred) => (
                 <PrimaryButton
                   key={cred.id}
-                  onClick={() => {
-                    window.open(cred.URILink, "_blank");
-                  }}
+                  onClick={() => window.open(cred.URILink, "_blank")}
                 >
                   Connect {cred.provider}
                 </PrimaryButton>

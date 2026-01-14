@@ -17,7 +17,7 @@ export default function WorkflowTriggerConfig({
     onNext,
 }) {
 
-    const configParams = [ // TODO: requête api pour récupérer les champs de config
+    const configParams = [ // TODO: requête api pour récupérer les champs de config - y est pas
         {
             id: "repository",
             label: "Repository",

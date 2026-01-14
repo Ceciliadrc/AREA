@@ -49,7 +49,7 @@ export default function WorkflowCreation({ goTo }) {
 
   const handleCreate = async () => {
     const payload = buildPayload();
-    // TODO: requête API
+    // TODO: requête API -- oui y est
 
     if (goTo) {
       goTo("workflowResume");

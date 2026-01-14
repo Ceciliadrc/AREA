@@ -9,7 +9,7 @@ import AppLayout from "../../components/layout/AppLayout";
 import { PageTitle } from "../../components/ui/PageTitle";
 
 export default function WorkflowReactionService({ value, onBack, onSelect }) {
-    const services = [ // TODO: requête api qui récupère la liste des services connectés
+    const services = [ // TODO: requête api qui récupère la liste des services connectés -- ça y est mais seulement services connectés ou tous les services 
         { id: "gmail", name: "Gmail" },
     ];
 

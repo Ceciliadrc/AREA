@@ -7,6 +7,6 @@
 
 export default class Info {
 
-    // Je sais pas sah
+    // TODO: Je sais pas sah
 
 }

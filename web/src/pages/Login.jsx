@@ -41,7 +41,6 @@ export default function Login({ goTo }) {
               goTo("profile");
             } catch (error) {
               console.error("Login failed:", error);
-              // TODO: afficher un message d'erreur propre dans l'UI
               alert("Login failed, please check your credentials.");
             }
           }}

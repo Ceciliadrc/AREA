@@ -7,6 +7,6 @@
 
 export default class GoogleLogin {
 
-    // Je sais pas sah
+    // TODO: Je sais pas sah
 
 }
