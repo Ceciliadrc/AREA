@@ -10,6 +10,7 @@
         <!-- For physical device testing (replace with computer's IP) -->
         <!-- <domain includeSubdomains="true">192.168.1.100</domain> -->
         <domain includeSubdomains="true">172.24.139.34</domain>
+        <domain includeSubdomains="true">10.15.191.135</domain>
 
         <!-- Common local IP ranges -->
         <domain includeSubdomains="true">192.168.0.0</domain>

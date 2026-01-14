@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.example.area.data.repository.AuthRepository
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.focus.focusModifier
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -79,7 +80,30 @@ fun RegisterScreen(
                 GradientButton(
                     text = "Register",
                     onClick = {
-                        //TOD0
+                        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (password != confirmPassword) {
+                            Toast.makeText(context, "Passwords don't match", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            Toast.makeText(context, "Creating account...", Toast.LENGTH_SHORT)
+                                .show()
+                            isLoading = true
+                            scope.launch {
+                                val result = authRepository.register(username, email, password)
+                                isLoading = false
+                                if (result.isSuccess) {
+                                    val userResponse = result.getOrNull()
+                                    val message = userResponse?.message ?: "Registration successful!"
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                    onRegisterSuccess()
+                                } else {
+                                    val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+                                    Toast.makeText(context, "Registration failed: $errorMessage", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     isLoading = isLoading
