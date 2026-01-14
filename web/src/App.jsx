@@ -11,9 +11,11 @@ import WorkflowResume from "./pages/WorkflowResume";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import WorkflowCreation from "./pages/workflowCreation/WorkflowCreation";
+import AdminPanel from "./pages/AdminPanel"
 
 function App() {
-  const [page, setPage] = useState("login");
+  // const [page, setPage] = useState("login");
+  const [page, setPage] = useState("adminPanel");
 
   return (
     <>
@@ -23,6 +25,7 @@ function App() {
       {page === "profile" && <Profile goTo={setPage} />}
       {page === "workflowCreation" && <WorkflowCreation goTo={setPage} />}
       {page === "workflowResume" && <WorkflowResume goTo={setPage} />}
+      {page === "adminPanel" && <AdminPanel goTo={setPage} />}
     </>
   );
 }

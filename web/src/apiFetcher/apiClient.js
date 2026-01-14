@@ -19,16 +19,15 @@ class ApiClient {
     token;
 
     constructor() {
-        this.baseUrl = this.baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+        this.baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
     }
 
     async request(endpoint, options = {}) {
         const endpointStr = String(endpoint);
-        const isInfoEndpoint = endpointStr === API_ENDPOINTS.info;
 
         const url =
             this.baseUrl.replace(/\/+$/, "") +
-            (isInfoEndpoint ? "" : "/api/") +
+            (isInfoEndpoint ? "" : "/") +
             endpointStr.replace(/^\/+/, "");
 
         const init = {

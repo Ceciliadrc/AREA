@@ -20,7 +20,7 @@ export default function WorkflowTriggerAction({
         { id: "push_to_branch", name: "Push To Branch" },
     ];
 
-    const actions = placeholderActions; //TODO: requête api qui récupère la liste des actions du service
+    const actions = placeholderActions; //TODO: requête api qui récupère la liste des actions du service -- ça y est
 
     return (
         <AppLayout>

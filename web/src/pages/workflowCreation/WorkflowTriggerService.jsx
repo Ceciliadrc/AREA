@@ -10,7 +10,7 @@ import { PageTitle } from "../../components/ui/PageTitle";
 
 export default function WorkflowTriggerService({ value, onSelect }) {
 
-    const services = [ // TODO: requête api
+    const services = [ // TODO: requête api -- ça y est
         { id: "gmail", name: "Gmail" },
         // ...
     ];
