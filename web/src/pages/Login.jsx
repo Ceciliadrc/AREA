@@ -97,7 +97,7 @@ export default function Login({ goTo }) {
           login with
         </p>
 
-        {/* Boutons connexion social (non branchés pour l'instant) */}
+        {/* Boutons connexion social */}
         <div
           style={{
             display: "flex",

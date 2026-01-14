@@ -27,7 +27,7 @@ class ApiClient {
 
         const url =
             this.baseUrl.replace(/\/+$/, "") +
-            ("/") +
+            (isInfoEndpoint ? "" : "/") +
             endpointStr.replace(/^\/+/, "");
 
         const init = {

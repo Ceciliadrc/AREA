@@ -27,12 +27,12 @@ export default function Profile({ goTo }) {
   ];
 
   const availableCredentials = [
-    { id: "github", provider: "Github", URILink: "" },
-    { id: "google", provider: "Google", URILink: "http://localhost:8080/auth/google/callback" },
-    { id: "openAi", provider: "OpenAI", URILink: "" },
-    { id: "letterbox", provider: "Letterbox", URILink: "" },
-    { id: "pathe", provider: "Pathé", URILink: "" },
-    { id: "meteoFrance", provider: "Météo France", URILink: "" },
+    { id: "twitch", provider: "Twitch", URILink: "https://id.twitch.tv/oauth2/authorize" },
+    { id: "google", provider: "Google", URILink: "https://accounts.google.com/o/oauth2/v2/auth" },
+    { id: "openAi", provider: "OpenAI", URILink: "https://auth.openai.com/oauth/authorize" },
+    { id: "instagram", provider: "Instagram", URILink: "https://api.instagram.com/oauth/authorize" },
+    { id: "notion", provider: "Notion", URILink: "https://api.notion.com/v1/oauth/authorize" },
+    { id: "spotify", provider: "Spotify", URILink: "https://accounts.spotify.com/authorize" },
   ];
 
   // Stats profil
