@@ -13,7 +13,7 @@ Before making any changes, please check existing issues to see if someone has al
 ## How to contribute
 
 ### Report bugs
-- Check if the bug as already been reported in the [issues](../issues)
+- Check if the bug as already been reported in the [issues](../../../issues)
 - Create a new issue using this template:
 ```bash
 Title : [BUG] <descriptive title>
@@ -33,7 +33,7 @@ Mobile or Web, Browser, Versions, etc.
 ```
 
 ### Suggest features
-- Check the existing [issues](../issues) to see if the feature you want to included has been discussed.
+- Check the existing [issues](../../../issues) to see if the feature you want to included has been discussed.
 - Create a new issue using this template:
 ```bash
 Title : [FEATURE] <descriptive title>
