@@ -1,11 +1,12 @@
 from app import models, database
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from typing import Optional
 
 router = APIRouter(prefix="/areas", tags=["areas"])
 
 @router.post("/")
-def create_area(name: str, user_id: int, action_id: int, reaction_id: int, db: Session = Depends(database.get_db)):
+def create_area(name: str, user_id: int, action_id: int, reaction_id: int, db: Session = Depends(database.get_db), parameters: Optional[str] = Query(None)):
 
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
@@ -15,7 +16,8 @@ def create_area(name: str, user_id: int, action_id: int, reaction_id: int, db: S
         name=name,
         user_id=user_id,
         action_id=action_id,
-        reaction_id=reaction_id
+        reaction_id=reaction_id,
+        parameters=parameters
     )
     db.add(new_area)
     db.commit()

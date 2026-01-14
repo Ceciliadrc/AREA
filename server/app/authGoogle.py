@@ -18,7 +18,7 @@ GOOGLE_TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
 @router.get("/google/login")
-def logWithGoogle(db: Session = Depends(database.get_db)):
+def logWithGoogle(user_id: int, db: Session = Depends(database.get_db)):
     config = oauthDbConfig.OauthDbConfig.get_service(db, "google")
     if not config:
         raise HTTPException(500, "Google oauth not configured")
@@ -29,7 +29,8 @@ def logWithGoogle(db: Session = Depends(database.get_db)):
         "response_type": "code",
         "scope": "openid email profile",
         "access_type": "offline",
-        "prompt": "consent"
+        "prompt": "consent",
+        "state": str(user_id)
     }
 
     google_url = f"{GOOGLE_AUTH_URL}?{urlencode(params)}"
@@ -37,11 +38,13 @@ def logWithGoogle(db: Session = Depends(database.get_db)):
 
 
 @router.get("/google/callback")
-async def google_callback(code: str, user_id: int, db: Session = Depends(database.get_db)):
+async def google_callback(state: str, code: str, user_id: int, db: Session = Depends(database.get_db)):
 
     config = oauthDbConfig.OauthDbConfig.get_service(db, "google")
     if not config:
         raise HTTPException(500, "Google oauth not configured")
+    
+    user_id = int(state)
 
     async with httpx.AsyncClient() as client:
         res = await client.post(

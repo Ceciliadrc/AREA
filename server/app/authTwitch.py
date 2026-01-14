@@ -22,7 +22,7 @@ TWITCH_TOKEN_URL = "https://id.twitch.tv/oauth2/token"
 TWITCH_USER_URL = "https://api.twitch.tv/helix/users"
 
 @router.get("/twitch/login")
-def logWithTwitch(db: Session = Depends(database.get_db)):
+def logWithTwitch(user_id: int, db: Session = Depends(database.get_db)):
     config = oauthDbConfig.OauthDbConfig.get_service(db, "twitch")
     if not config:
         raise HTTPException(500, "Twitch oauth not configured")
@@ -32,6 +32,7 @@ def logWithTwitch(db: Session = Depends(database.get_db)):
         "redirect_uri": config.redirect_uri,
         "response_type": "code",
         "scope": "user:read:email",
+        "state": str(user_id)
     }
 
     twitch_url = f"{TWITCH_AUTH_URL}?{urlencode(params)}"
@@ -40,11 +41,13 @@ def logWithTwitch(db: Session = Depends(database.get_db)):
 
 
 @router.get("/twitch/callback")
-async def twitch_callback(code: str, user_id: int, db: Session = Depends(database.get_db)):
+async def twitch_callback(state: str, code: str, user_id: int, db: Session = Depends(database.get_db)):
     config = oauthDbConfig.OauthDbConfig.get_service(db, "twitch")
     if not config:
         raise HTTPException(500, "Twitch oauth not configured")
-
+    
+    user_id = int(state)
+    
     async with httpx.AsyncClient() as client:
         res = await client.post(
             TWITCH_TOKEN_URL,

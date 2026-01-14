@@ -1,7 +1,7 @@
 from app import models, database
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from .actionConfig import ACTION_CONFIGS, REACTION_CONFIGS
 router = APIRouter(prefix="/services", tags=["services"])
 
 @router.get("/")
@@ -44,6 +44,7 @@ def get_service_action(service_id: int, db: Session = Depends(database.get_db)):
         "actions": [{
             "id": action.id,
             "name": action.name,
+            "description": action.description
         }
         for action in actions
         ]
@@ -59,7 +60,26 @@ def get_service_reaction(service_id: int, db: Session = Depends(database.get_db)
         "reactions": [{
             "id": reaction.id,
             "name": reaction.name,
+            "description": reaction.description
         }
         for reaction in reactions
         ]
+    }
+
+@router.get("/actions/{service_name}/{action_name}")
+def get_action_config(service_name: str, action_name: str):
+    config = ACTION_CONFIGS.get(service_name, {}).get(action_name, {})
+    return {
+        "service": service_name,
+        "action": action_name,
+        **config
+    }
+
+@router.get("/reactions/{service_name}/{reaction_name}")
+def get_reaction_config(service_name: str, reaction_name: str):
+    config = REACTION_CONFIGS.get(service_name, {}).get(reaction_name, {})
+    return {
+        "service": service_name,
+        "reaction": reaction_name,
+        **config
     }
