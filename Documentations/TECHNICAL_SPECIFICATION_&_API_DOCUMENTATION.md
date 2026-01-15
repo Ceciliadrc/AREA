@@ -1,13 +1,103 @@
-# AREA
+# Technical Specification & API Documentation
 
-## Project by
-- anna.bardoux@epitech.eu
-- carla.thierry@epitech.eu
-- cecilia.deriche@epitech.eu
-- doha.mansour@epitech.eu
-- jules.de-rus@epitech.eu
+*This document outlines the technical specifications and API models for the Action-Reaction automation platform. The system allows users to create automated workflows by connecting triggers (Actions) from one service to resulting tasks (REActions) in another*
 
-### **API details**
+- **System Architecture Summary :**
+    - **Application Server ~** Made in Python
+    - **Web Client ~** A React frontend served on port 8081.
+    - **Mobile Client ~** An Android app made in Kotlin
+
+### **Data Models**
+
+**User ~**
+```
+class UserCreate(BaseModel):
+    email: EmailStr
+    username: str
+    password: str
+
+class User(UserCreate):
+    id: int
+    is_active: bool
+    created_at: datetime
+```
+
+**OAuthConnection ~**
+
+```
+class OAuthConnection(BaseModel):
+		service_id: id
+		id: int
+		usser_id: int
+		access_token: str
+		refresh_token: str
+		is_active: bool
+		connected_at:
+```
+
+**Action ~**
+
+```
+class Action(BaseModel):
+		service_id: id
+		name: str
+		display_name: str
+		description: str
+		action_type: ActionType
+		is_active: bool
+		created_at: datetime
+
+class ActionType(str, Enum)
+```
+
+**Reaction ~**
+
+```
+class Reaction(BaseModel):
+		service_id: id
+		name: str
+		display_name: str
+		description: str
+		is_active: bool
+		created_at: datetime
+```
+
+**Service ~**
+
+```
+class Service(BaseModel):
+		id: int
+		name: str
+		display_name: str
+		description: str
+		service_type: ServiceType
+		auth_url:
+		is_active: bool
+		created_at: datetime
+
+class ServiceType(str, Enum)
+```
+
+**Area ~**
+
+```
+class Area(BaseModel):
+		id: int
+		name: str
+		description: str
+		action_id: int
+		reaction_id: int
+		user_id: int
+
+class AreaUpdate(BaseModel):
+		name: str
+		description: str
+		action_id: int
+		reaction_id: int
+		update_at: datetime
+```
+
+### **API Endpoints**
 
 **AUTHENTIFICATION**:
 
