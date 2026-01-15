@@ -4,11 +4,11 @@
 
 **For the services we choose :**
 
-- Google
-- Instagram
+- Dropbox
+- Github
+- Gmail
 - Notion
 - OpenAi
-- Spotify
 - Twitch
 
 ## Oauth2 implementation in our project ~
@@ -34,7 +34,7 @@
 In our project, we can:
 
 - Retrieve the OAuth configuration of a service by its name
-- Create **or** update OAuth tokens for a user and a specific service
+- Create or update OAuth tokens for a user and a specific service
 - Fetch OAuth token data for a user based on the service name
 - Initialize default OAuth-enabled services in the database
 
