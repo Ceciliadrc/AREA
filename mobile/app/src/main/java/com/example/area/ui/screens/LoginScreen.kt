@@ -77,7 +77,7 @@ fun LoginScreen (
                 )
 
                 OrDivider()
-                Text("Login with", fontSize = 18.sp, color = Mauve)
+                Text("Login with", fontSize = 18.sp, color = Mauve, modifier = Modifier.align(Alignment.CenterHorizontally))
                 OAuthButtonsRow()
                 Spacer(modifier = Modifier.height(16.dp))
                 OrDivider()
@@ -130,7 +130,7 @@ fun OAuthButtonsRow() {
         OAuthButton(
             text = "Google",
             onClick = { /* TODO: Google OAuth */ },
-            color = Color(0xFFA50E0E)
+            color = Mauve
         )
 
         // like...add others if we got any ideas
@@ -142,6 +142,7 @@ fun RegisterLink(
     onNavigateToRegister: () -> Unit
 ) {
     Column(
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(

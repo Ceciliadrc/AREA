@@ -110,7 +110,7 @@ fun RegisterScreen(
                 )
 
                 OrDivider()
-                Text("Sign up with", fontSize = 16.sp, color = Mauve, fontWeight = FontWeight.Medium)
+                Text("Sign up with", fontSize = 16.sp, color = Mauve, fontWeight = FontWeight.Medium, modifier = Modifier.align(Alignment.CenterHorizontally))
                 OAuthButtonsRow()
                 LoginLink(
                     onNavigateToLogin = onNavigateToLogin
