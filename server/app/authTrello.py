@@ -19,21 +19,20 @@ TRELLO_AUTH_URL = "https://trello.com/1/authorize"
 TRELLO_USERINFO_URL = "https://api.trello.com/1/members/me"
 
 class TrelloOAuthConfig:
-    api_key = os.getenv("TRELLO_API_ID")
-    api_secret = os.getenv("TRELLO_API_SECRET")
-    redirect_uri = os.getenv("TRELLO_REDIRECT_URI")
+    api_key = os.getenv("TRELLO_API_KEY", "87c2d227a4c327ae4de99603af6b71ed")
+    redirect_uri = os.getenv("TRELLO_REDIRECT_URI", "http://localhost:8080/auth/trello/callback")
 
 @router.get("/trello/login")
 def logWithTrello(user_id: int):
-    if not TrelloOAuthConfig.api_key or not TrelloOAuthConfig.api_secret:
-        raise HTTPException(500, "Trello OAuth not configured in .env")
+    if not TrelloOAuthConfig.api_key:
+        raise HTTPException(500, "TRELLO_API_KEY not configured in .env")
 
     params = {
         "key": TrelloOAuthConfig.api_key,
-        "response_type": "token",
-        "scope": "read,write,account",
-        "expiration": "30days",
-        "name": "AREA app",
+        "response_type": "token",  # vu que cest implicit Flow = token direct
+        "scope": "read,write",
+        "expiration": "never",
+        "name": "AREA App",
         "callback_method": "fragment",
         "return_url": TrelloOAuthConfig.redirect_uri,
         "state": str(user_id)
@@ -46,51 +45,45 @@ def logWithTrello(user_id: int):
 async def trello_callback(state: str, token: str = None, db: Session = Depends(database.get_db)):
     if not TrelloOAuthConfig.api_key or not TrelloOAuthConfig.api_secret:
         raise HTTPException(500, "Trello OAuth not configured in .env")
-
+    
     user_id = int(state)
-    access_token = token
 
-    if not access_token:
-                raise HTTPException(400, f"No access token for Trello")
+    if not token:
+        raise HTTPException(400, "No token received from Trello")
 
     try:
         async with httpx.AsyncClient() as client:
-            user_info_res = await client.get(
-                TRELLO_USERINFO_URL,
-                params=({
+            response = await client.get(
+                "https://api.trello.com/1/members/me",
+                params={
                     "key": TrelloOAuthConfig.api_key,
-                    "token": access_token,
-                })
+                    "token": token
+                },
+                timeout=10.0
             )
-            if user_info_res.status_code != 200:
-                user_info_res = await client.get(
-                TRELLO_USERINFO_URL,
-                params=({
-                    "token": access_token,
-                })
-            )
-
-            user_info = user_info_res.json()
-
+            if response.status_code != 200:
+                raise HTTPException(400, "Invalid Trello token")
+                
+            user_info = response.json()
+            
     except Exception as e:
-            raise HTTPException(400, f"Error token Trello")
-
+        raise HTTPException(400, f"Error token Trello")
+    
     service = db.query(models.Service).filter(models.Service.name == "trello").first()
-
-    from app.oauthDbConfig import OauthDbConfig
-    OauthDbConfig.save_user(
-        db=db,
-        user_id=user_id,
-        service_id=service.id,
-        access_token=access_token,
-        refresh_token=None
-    )
-
+    
+    if service:
+        from app.oauthDbConfig import OauthDbConfig
+        OauthDbConfig.save_user(
+            db=db,
+            user_id=user_id,
+            service_id=service.id,
+            access_token=token,
+            refresh_token=None,
+        )
     return {
         "message": "Trello login success!",
         "user_info": {
             "id": user_info.get("id"),
             "username": user_info.get("username"),
         },
-        "access_token": access_token
     }

@@ -84,34 +84,25 @@ def get_reaction_config(service_name: str, reaction_name: str):
         **config
     }
 
-@router.get("/users/{user_id}/credentials")
-def get_user_credentials(user_id: int,db: Session = Depends(database.get_db),current_user: models.User = Depends(security.active_user)):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+@router.get("/status/")
+def get_services_status_simple(user_id: int, db: Session = Depends(database.get_db), current_user: models.User = Depends(security.active_user)):
+    if current_user.id != user_id and current_user.role != "admin":
+        raise HTTPException(403, "Unauthorized")
     
-    # recupere services connecte
+    all_services = db.query(models.Service).all()
+
     user_tokens = db.query(models.UserOauth).filter(models.UserOauth.user_id == user_id).all()
+    connected_ids = {token.service_id for token in user_tokens}
     
-    credentials = []
-    for token in user_tokens:
-        service = db.query(models.Service).filter(
-            models.Service.id == token.service_id
-        ).first()
-        
-        if service:
-            credentials.append({
-                "service_id": service.id,
-                "service_name": service.name,
-                "display_name": service.display_name,
-                "connected": True,
-                "has_token": bool(token.access_token),
-                "provider_user_id": token.provider_user_id
-            })
     return {
         "user_id": user_id,
-        "username": user.username,
-        "email": user.email,
-        "connected_services": credentials,
-        "total_connected": len(credentials)
+        "services": [
+            {
+                "id": service.id,
+                "name": service.name,
+                "display_name": service.display_name,
+                "connected": service.id in connected_ids
+            }
+            for service in all_services
+        ]
     }
