@@ -70,8 +70,8 @@ fun OAuthButton(
     ) {
         Text(
             text = text,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 }
