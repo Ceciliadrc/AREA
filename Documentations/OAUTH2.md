@@ -8,7 +8,7 @@
 &emsp; **❀** Github
 &emsp; **❀** Gmail
 &emsp; **❀** Notion
-&emsp; **❀** OpenAi
+&emsp; **❀** Trello
 &emsp; **❀** Twitch
 
 ## Oauth2 implementation in our project ~

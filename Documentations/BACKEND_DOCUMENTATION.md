@@ -44,7 +44,7 @@
 
 &emsp; ʚɞ Notion
 
-&emsp; ʚɞ OpenAi
+&emsp; ʚɞ Trello
 
 &emsp; ʚɞ Twitch
 

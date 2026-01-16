@@ -53,22 +53,24 @@
 
 &emsp; ● **Create a page** **~** creates a new page in the user’s workspace
 <br>
-## OpenAi
+## Trello
 
 &ensp; *An American artificial intelligence research organization*
 
 #### Actions :
 
-&emsp; ● **Ask a question ~** happens when the user ask a question or submit a text
+&emsp; ● **New card created ~** happens when a new card is created
 
-&emsp; ● **Upload a file** **~** happens when the user uploads a text file
+&emsp; ● **Card archived** **~** happens when a card is moved in the archive
 
 #### Reactions :
 
-&emsp; ● **Generate the answer** **~** sends the answer or a text to the user’s request
+&emsp; ● **Create a card** **~** Generates a new card in the specified Trello board
 
-&emsp; ● **Process a file** **~** Summarizes the content of a text file
+&emsp; ● **Add label to card** **~** Add a desired label to a Trello card
+
 <br>
+
 ## Twitch
 
 &ensp; *An interactive livestreaming service for content spanning gaming, entertainment, sports, music, and more*
