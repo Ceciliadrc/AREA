@@ -7,7 +7,6 @@ from app import models
 from .handlers.gmailHandler import GmailHandler
 from .handlers.notionHandler import NotionHandler
 from .handlers.twitchHandler import TwitchHandler
-from .handlers.openAiHandler import OpenAiHandler
 from .handlers.githubHandler import GithubHandler
 from .handlers.dropBoxHandler import DropboxHandler
 
@@ -20,7 +19,6 @@ class Hook:
             "google": GmailHandler(),
             "notion": NotionHandler(),
             "twitch": TwitchHandler(),
-            "openai": OpenAiHandler(),
             "github": GithubHandler(),
             "dropbox": DropboxHandler(),
         }

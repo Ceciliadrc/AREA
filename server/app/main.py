@@ -8,10 +8,10 @@ from .areas import router as areas_router
 from .services import router as services_router
 from sqlalchemy import exc
 from app.hook import hook
+from .authTrello import router as trello_auth_router
 from .authTwitch import router as twitch_auth_router
 from .authNotion import router as notion_auth_router
 from .authDropbox import router as dropbox_auth_router
-from .authOpenAi import router as openAi_auth_router
 from .authGithub import router as github_auth_router
 from .authGoogle import router as google_auth_router
 from .init_all_services import init_services
@@ -51,8 +51,8 @@ app.include_router(google_auth_router)
 app.include_router(twitch_auth_router)
 app.include_router(notion_auth_router)
 app.include_router(dropbox_auth_router)
-app.include_router(openAi_auth_router)
 app.include_router(github_auth_router)
+app.include_router(trello_auth_router)
 
 @app.get("/")
 async def root():
