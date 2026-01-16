@@ -5,8 +5,10 @@
 ** WorkflowReactionAction.jsx
 */
 
+import { useState, useEffect } from "react";
 import AppLayout from "../../components/layout/AppLayout";
 import { PageTitle } from "../../components/ui/PageTitle";
+import api from "../../apiFetcher/api";
 
 export default function WorkflowReactionAction({
     service,
@@ -14,13 +16,28 @@ export default function WorkflowReactionAction({
     onBack,
     onSelect,
 }) {
-    const placeholderActions = [
-        { id: "new_pull_request", name: "New Pull Request" },
-        { id: "new_issue", name: "New Issue" },
-        { id: "push_to_branch", name: "Push To Branch" },
-    ];
+    const [actions, setActions] = useState([]);
 
-    const actions = placeholderActions; //TODO: requête api qui récupère la liste des actions du service -- oui y est
+    useEffect(() => {
+        if (!service) return;
+
+        const fetchActions = async () => {
+            try {
+                const data = await api.getServiceReactions(service.id);
+                setActions(data);
+            } catch (err) {
+                console.error("Failed to load actions:", err);
+                // placeholders statique si l'API marche pas
+                setActions([
+                    { id: "new_pull_request", name: "New Pull Request" },
+                    { id: "new_issue", name: "New Issue" },
+                    { id: "push_to_branch", name: "Push To Branch" },
+                ]);
+            }
+        };
+
+        fetchActions();
+    }, [service]);
 
     return (
         <AppLayout>
@@ -33,7 +50,14 @@ export default function WorkflowReactionAction({
                     paddingTop: 60,
                 }}
             >
-                <div onClick={onBack} style={{ color: "black", alignSelf: "flex-start", cursor: "pointer" }}>
+                <div
+                    onClick={onBack}
+                    style={{
+                        color: "black",
+                        alignSelf: "flex-start",
+                        cursor: "pointer",
+                    }}
+                >
                     ← Back
                 </div>
 

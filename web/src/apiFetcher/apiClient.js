@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2025
-** PROJECT_MIRROR [WSL: Ubuntu]
+** PROJECT_MIRROR
 ** File description:
 ** apiClient.js
 */
@@ -14,227 +14,283 @@ import Info from "./Objects/Info.js";
 import GoogleLogin from "./Objects/GoogleLogin.js";
 
 class ApiClient {
-
     baseUrl;
     token;
 
     constructor() {
-        this.baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+        this.baseUrl =
+            import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+        this.token = null;
+    }
+
+    setToken(token) {
+        this.token = token;
+    }
+
+    clearToken() {
+        this.token = null;
+    }
+
+    buildUrl(endpoint) {
+        return (
+            this.baseUrl.replace(/\/+$/, "") +
+            "/" +
+            String(endpoint).replace(/^\/+/, "")
+        );
     }
 
     async request(endpoint, options = {}) {
-        const endpointStr = String(endpoint);
-
-        const url =
-            this.baseUrl.replace(/\/+$/, "") +
-            ("/") +
-            endpointStr.replace(/^\/+/, "");
+        const url = this.buildUrl(endpoint);
 
         const init = {
             method: options.method || "GET",
             headers: {
-                ...(this.token ? { "Authorization": `Bearer ${this.token}` } : {}),
+                accept: "application/json",
+                ...(this.token
+                    ? { Authorization: `Bearer ${this.token}` }
+                    : {}),
                 ...(options.headers || {})
             }
         };
 
         if (options.body !== undefined) {
-            if (typeof options.body === "string") {
-                init.body = options.body;
-                if (!init.headers["Content-Type"])
-                    init.headers["Content-Type"] = "application/json";
-            } else {
-                init.body = JSON.stringify(options.body);
-                init.headers["Content-Type"] = init.headers["Content-Type"] || "application/json";
-            }
+            init.body =
+                typeof options.body === "string"
+                    ? options.body
+                    : JSON.stringify(options.body);
+
+            init.headers["Content-Type"] =
+                init.headers["Content-Type"] || "application/json";
         }
 
         const res = await fetch(url, init);
 
         if (!res.ok) {
-            let errPayload = null;
-            try { errPayload = await res.json(); } catch {}
-            const message = (errPayload?.error || errPayload?.message) || `HTTP ${res.status}`;
-            const error = new Error(message);
+            let payload = null;
+            try {
+                payload = await res.json();
+            } catch {}
+
+            const error = new Error(
+                payload?.detail ||
+                    payload?.error ||
+                    payload?.message ||
+                    `HTTP ${res.status}`
+            );
             error.status = res.status;
-            error.payload = errPayload;
+            error.payload = payload;
             throw error;
         }
+
+        if (res.status === 204)
+            return null;
 
         return res.json();
     }
 
-    errorHandler = {
-        400: () => { console.error("Bad request"); return API_RESPONSE_CODE.BAD_REQUEST; },
-        401: () => { console.error("Unauthorized - check your login"); return API_RESPONSE_CODE.UNAUTHORIZED; },
-        403: () => { console.error("Forbidden - you don’t have access"); return API_RESPONSE_CODE.FORBIDDEN; },
-        404: () => { console.error("Resource not found"); return API_RESPONSE_CODE.NOT_FOUND; },
-        429: () => { console.error("Too many requests - rate limited"); return API_RESPONSE_CODE.TOO_MANY_REQUESTS; },
-        500: () => { console.error("Internal server error"); return API_RESPONSE_CODE.INTERNAL_SERVER_ERROR; },
-        502: () => { console.error("Bad gateway"); return API_RESPONSE_CODE.BAD_GATEWAY; },
-    };
-
-
-    // ! Authentification
+    // Auth
 
     async register(username, email, password) {
-        try {
-            const data = await this.request(API_ENDPOINTS.register, {
-                method: "POST",
-                body: { username, email, password }
-            });
-            return data;
-        } catch (error) {
-            console.error("Can't register user: ", error);
-            throw error;
-        }
+        return this.request(API_ENDPOINTS.register, {
+            method: "POST",
+            body: { username, email, password }
+        });
     }
 
     async login(email, password) {
-        try {
-            const data = await this.request(API_ENDPOINTS.login, {
-                method: "POST",
-                body: { email, password }
-            });
+        const data = await this.request(API_ENDPOINTS.login, {
+            method: "POST",
+            body: { email, password }
+        });
 
-            if (data?.token || data?.access_token) {
-                this.token = data.token || data.access_token;
-            }
+        if (data?.access_token || data?.token)
+            this.token = data.access_token || data.token;
 
-            return data;
-        } catch (error) {
-            console.error("Can't login user: ", error);
-            throw error;
-        }
+        return data;
     }
 
-    async getGoogleLogin() {
-        try {
-            const data = await this.request(API_ENDPOINTS.googleLogin);
-            return new GoogleLogin(data);
-        } catch (error) {
-            console.error("Can't get Google login data: ", error);
-            throw error;
-        }
+    async verifyToken(token = this.token) {
+        if (!token)
+            throw new Error("No token to verify");
+
+        return this.request(
+            `${API_ENDPOINTS.verify}?token=${encodeURIComponent(token)}`,
+            { method: "POST" }
+        );
     }
 
+    async getMe() {
+        return this.request(API_ENDPOINTS.me);
+    }
 
-    // ! Services
+    async getMyRole() {
+        return this.request(API_ENDPOINTS.myRole);
+    }
+
+    async getUsers() {
+        return this.request(API_ENDPOINTS.users);
+    }
+
+    async getUserById(userId) {
+        return this.request(`${API_ENDPOINTS.users}/${userId}`);
+    }
+
+    async deleteUser(userId) {
+        await this.request(`${API_ENDPOINTS.users}/${userId}`, {
+            method: "DELETE"
+        });
+        return API_RESPONSE_CODE.OK;
+    }
+
+    async updateUserRole(userId, newRole) {
+        return this.request(
+            `${API_ENDPOINTS.users}/${userId}/role?new_role=${encodeURIComponent(
+                newRole
+            )}`,
+            { method: "PUT" }
+        );
+    }
+
+    // OAuth
+
+    async getGoogleLogin(userId) {
+        const data = await this.request(
+            `${API_ENDPOINTS.googleLogin}?user_id=${encodeURIComponent(userId)}`
+        );
+        return new GoogleLogin(data);
+    }
+
+    async googleCallback({ code, state, user_id }) {
+        const params = new URLSearchParams({ code, state, user_id });
+        return this.request(
+            `${API_ENDPOINTS.googleCallback}?${params.toString()}`
+        );
+    }
+
+    async getSpotifyLogin(userId) {
+        return this.request(
+            `${API_ENDPOINTS.spotifyLogin}?user_id=${encodeURIComponent(userId)}`
+        );
+    }
+
+    async spotifyCallback({ code, state }) {
+        const params = new URLSearchParams({ code, state });
+        return this.request(
+            `${API_ENDPOINTS.spotifyCallback}?${params.toString()}`
+        );
+    }
+
+    async getTwitchLogin(userId) {
+        return this.request(
+            `${API_ENDPOINTS.twitchLogin}?user_id=${encodeURIComponent(userId)}`
+        );
+    }
+
+    async twitchCallback({ code, state, user_id }) {
+        const params = new URLSearchParams({ code, state, user_id });
+        return this.request(
+            `${API_ENDPOINTS.twitchCallback}?${params.toString()}`
+        );
+    }
+
+    // Services
 
     async getServices() {
-        try {
-            const data = await this.request(API_ENDPOINTS.services);
-
-            if (Array.isArray(data))
-                return data.map(item => new Service(item));
-            else if (Array.isArray(data?.items))
-                return data.items.map(item => new Service(item));
-            else
-                return [];
-        } catch (error) {
-            console.error("Can't get services: ", error);
-            throw error;
-        }
+        const data = await this.request(API_ENDPOINTS.services);
+        return Array.isArray(data)
+            ? data.map(s => new Service(s))
+            : [];
     }
 
-    async getServiceById(id) {
-        try {
-            const data = await this.request(`${API_ENDPOINTS.services}/${id}`);
-            return new Service(data);
-        } catch (error) {
-            console.error("Can't get service: ", error);
-            throw error;
-        }
+    async getServiceById(serviceId) {
+        const data = await this.request(
+            `${API_ENDPOINTS.services}/${serviceId}`
+        );
+        return new Service(data);
     }
 
-async getServiceActions(id) {
-    try {
-        const data = await this.request(`${API_ENDPOINTS.services}/${id}/actions`);
-
-        if (Array.isArray(data))
-            return data.map(item => new Action(item));
-        else if (Array.isArray(data?.items))
-            return data.items.map(item => new Action(item));
-        else
-            return [];
-    } catch (error) {
-        console.error("Can't get service actions: ", error);
-        throw error;
+    async getServiceActions(serviceId) {
+        const data = await this.request(
+            `${API_ENDPOINTS.services}/${serviceId}/actions`
+        );
+        return Array.isArray(data)
+            ? data.map(a => new Action(a))
+            : [];
     }
-}
 
-async getServiceReactions(id) {
-    try {
-        const data = await this.request(`${API_ENDPOINTS.services}/${id}/reactions`);
-
-        if (Array.isArray(data))
-            return data.map(item => new Reaction(item));
-        else if (Array.isArray(data?.items))
-            return data.items.map(item => new Reaction(item));
-        else
-            return [];
-    } catch (error) {
-        console.error("Can't get service reactions: ", error);
-        throw error;
+    async getServiceReactions(serviceId) {
+        const data = await this.request(
+            `${API_ENDPOINTS.services}/${serviceId}/reactions`
+        );
+        return Array.isArray(data)
+            ? data.map(r => new Reaction(r))
+            : [];
     }
-}
 
+    async getActionConfig(serviceName, actionName) {
+        return this.request(
+            `${API_ENDPOINTS.services}/actions/${serviceName}/${actionName}`
+        );
+    }
 
-    // ! Areas
+    async getReactionConfig(serviceName, reactionName) {
+        return this.request(
+            `${API_ENDPOINTS.services}/reactions/${serviceName}/${reactionName}`
+        );
+    }
 
-    async createArea({ name, user_id, action_id, reaction_id }) {
-        try {
-            const payload = { name, user_id, action_id, reaction_id };
-            const data = await this.request(API_ENDPOINTS.areas, {
-                method: "POST",
-                body: payload
-            });
-            return new Area(data);
-        } catch (error) {
-            console.error("Can't create area: ", error);
-            throw error;
-        }
+    // Areas
+
+    async createArea({
+        name,
+        user_id,
+        action_id,
+        reaction_id,
+        parameters
+    }) {
+        const params = new URLSearchParams({
+            name,
+            user_id,
+            action_id,
+            reaction_id,
+            ...(parameters && {
+                parameters: JSON.stringify(parameters)
+            })
+        });
+
+        const data = await this.request(
+            `${API_ENDPOINTS.areas}?${params.toString()}`,
+            { method: "POST" }
+        );
+
+        return new Area(data);
     }
 
     async getAreasByUserId(userId) {
-        try {
-            const data = await this.request(`${API_ENDPOINTS.areas}?user_id=${encodeURIComponent(userId)}`);
-
-            if (Array.isArray(data))
-                return data.map(item => new Area(item));
-            else if (Array.isArray(data?.items))
-                return data.items.map(item => new Area(item));
-            else
-                return [];
-        } catch (error) {
-            console.error("Can't get areas: ", error);
-            throw error;
-        }
+        const data = await this.request(
+            `${API_ENDPOINTS.areas}?user_id=${encodeURIComponent(userId)}`
+        );
+        return Array.isArray(data)
+            ? data.map(a => new Area(a))
+            : [];
     }
 
-    async deleteAreaById(id) {
-        try {
-            await this.request(`${API_ENDPOINTS.areas}/${id}`, {
-                method: "DELETE"
-            });
-            return API_RESPONSE_CODE.OK;
-        } catch (error) {
-            console.error("Can't delete area: ", error);
-            throw error;
-        }
+    async deleteAreaById(areaId) {
+        await this.request(`${API_ENDPOINTS.areas}/${areaId}`, {
+            method: "DELETE"
+        });
+        return API_RESPONSE_CODE.OK;
     }
 
+    // Info/Root
 
-    // ! Info
+    async getRoot() {
+        return this.request(API_ENDPOINTS.root);
+    }
 
     async getInfo() {
-        try {
-            const data = await this.request(API_ENDPOINTS.info);
-            return new Info(data);
-        } catch (error) {
-            console.error("Can't get info: ", error);
-            throw error;
-        }
+        const data = await this.request(API_ENDPOINTS.info);
+        return new Info(data);
     }
 }
 

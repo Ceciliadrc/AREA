@@ -1,20 +1,41 @@
 /*
 ** EPITECH PROJECT, 2025
-** PROJECT_MIRROR [WSL: Ubuntu]
-** File description:
+** PROJECT_MIRROR
 ** apiConfig.js
 */
 
 export const API_ENDPOINTS = {
-    authentication: `/auth`,
+    root: `/`,
+    info: `/about.json`,
+
+    auth: `/auth`,
     register: `/auth/register`,
     login: `/auth/login`,
+    verify: `/auth/verify`,
+    me: `/auth/me`,
+    myRole: `/auth/me/role`,
+
+    users: `/auth/users`,
+
     googleLogin: `/auth/google/login`,
-    services: `/services`,
-    action: `/action`,
-    reaction: `/reaction`,
-    areas: `/areas`,
-    info: `/about.json`,
+    googleCallback: `/auth/google/callback`,
+    spotifyLogin: `/auth/spotify/login`,
+    spotifyCallback: `/auth/spotify/callback`,
+    twitchLogin: `/auth/twitch/login`,
+    twitchCallback: `/auth/twitch/callback`,
+
+    areas: `/areas`, // POST, GET
+    areaById: (id) => `/areas/${id}`,
+
+    services: `/services`, // GET
+    serviceById: (id) => `/services/${id}`,
+    serviceActions: (id) => `/services/${id}/actions`,
+    serviceReactions: (id) => `/services/${id}/reactions`,
+
+    actionConfig: (service, action) =>
+        `/services/actions/${service}/${action}`,
+    reactionConfig: (service, reaction) =>
+        `/services/reactions/${service}/${reaction}`,
 };
 
 export const API_RESPONSE_CODE = {
@@ -28,4 +49,4 @@ export const API_RESPONSE_CODE = {
     INTERNAL_SERVER_ERROR: 500,
     BAD_GATEWAY: 502,
     UNKNOWN_CODE: -1
-}
+};

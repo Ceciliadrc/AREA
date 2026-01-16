@@ -31,17 +31,17 @@ export default function Login({ goTo }) {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-
             const formData = new FormData(e.target);
             const email = formData.get("email");
             const password = formData.get("password");
 
             try {
-              await api.login(email, password); // POST /auth/login
+              const data = await api.login(email, password);
+              localStorage.setItem("user_id", data.id);
               goTo("profile");
             } catch (error) {
               console.error("Login failed:", error);
-              alert("Login failed, please check your credentials.");
+              alert(error?.response?.data?.detail || "Login failed");
             }
           }}
         >

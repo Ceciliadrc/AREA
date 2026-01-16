@@ -1,12 +1,15 @@
 /*
 ** EPITECH PROJECT, 2025
-** web [WSL: Ubuntu]
+** PROJECT_MIRROR [WSL: Ubuntu]
 ** File description:
 ** WorkflowReactionConfig.jsx
 */
 
+import { useState, useEffect } from "react";
 import AppLayout from "../../components/layout/AppLayout";
 import { PageTitle } from "../../components/ui/PageTitle";
+import api from "../../apiFetcher/api.js";
+
 
 export default function WorkflowReactionConfig({
     service,
@@ -16,19 +19,27 @@ export default function WorkflowReactionConfig({
     onChange,
     onCreate,
 }) {
+    const [configParams, setConfigParams] = useState([]);
 
-    const configParams = [ // TODO: requête api pour récupérer les champs de config -- y est pas
-        {
-            id: "branch",
-            label: "Branch name",
-            placeholder: "main",
-        },
-        {
-            id: "repository",
-            label: "Repository",
-            placeholder: "my_project",
-        },
-    ];
+    useEffect(() => {
+        if (!service || !action) return;
+
+        const fetchConfigParams = async () => {
+            try {
+                const data = await api.getActionConfigFields(service.id, action.id);
+                setConfigParams(data);
+            } catch (err) {
+                console.error("Failed to load config params:", err);
+                // Fallback statique si l'API échoue
+                setConfigParams([
+                    { id: "branch", label: "Branch name", placeholder: "main" },
+                    { id: "repository", label: "Repository", placeholder: "my_project" },
+                ]);
+            }
+        };
+
+        fetchConfigParams();
+    }, [service, action]);
 
     const params = value || {};
 
@@ -77,7 +88,7 @@ export default function WorkflowReactionConfig({
                             <input
                                 value={params[param.id] || ""}
                                 onChange={(e) => handleFieldChange(param.id, e.target.value)}
-                                placeholder={param.placeholder}
+                                placeholder={param.placeholder || ""}
                                 style={{
                                     color: "black",
                                     borderRadius: 24,

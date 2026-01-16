@@ -1,34 +1,41 @@
 /*
 ** EPITECH PROJECT, 2025
-** web [WSL: Ubuntu]
+** PROJECT_MIRROR [WSL: Ubuntu]
 ** File description:
-** WorkflowReactionService.jsx
+** WorkflowTriggerService.jsx
 */
 
+import { useEffect, useState } from "react";
 import AppLayout from "../../components/layout/AppLayout";
 import { PageTitle } from "../../components/ui/PageTitle";
+import api from "../../apiFetcher/api";
 
-export default function WorkflowReactionService({ value, onBack, onSelect }) {
-    const services = [ // TODO: requête api qui récupère la liste des services connectés -- ça y est mais seulement services connectés ou tous les services 
-        { id: "gmail", name: "Gmail" },
-    ];
+export default function WorkflowTriggerService({ value, onSelect }) {
+    const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadServices = async () => {
+            try {
+                // TODO: changer la route avec celle qui donne les workflows connectés (besoin de la créer)
+                const data = await api.getServices();
+                setServices(data);
+            } catch (err) {
+                console.error("Failed to load services", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadServices();
+    }, []);
 
     return (
         <AppLayout>
-            <div
-                style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    paddingTop: 60,
-                }}
-            >
-                <div onClick={onBack} style={{ color: "black", alignSelf: "flex-start", cursor: "pointer" }}>
-                    ← Back
-                </div>
-
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 60 }}>
                 <PageTitle>Choose the reaction</PageTitle>
+
+                {loading && <p>Loading services…</p>}
 
                 <div
                     style={{

@@ -1,26 +1,34 @@
 /*
 ** EPITECH PROJECT, 2025
-** web [WSL: Ubuntu]
+** PROJECT_MIRROR [WSL: Ubuntu]
 ** File description:
 ** WorkflowCreation.jsx
 */
 
-import { useState } from "react";
 import WorkflowTriggerService from "./WorkflowTriggerService";
+import { useState } from "react";
 import WorkflowTriggerAction from "./WorkflowTriggerAction";
 import WorkflowTriggerConfig from "./WorkflowTriggerConfig";
+
 import WorkflowReactionService from "./WorkflowReactionService";
 import WorkflowReactionAction from "./WorkflowReactionAction";
 import WorkflowReactionConfig from "./WorkflowReactionConfig";
+
+import WorkflowName from "./WorkflowName";
 import BottomNav from "../../components/nav/BottomNav";
+
+import api from "../../apiFetcher/api";
 
 const STEPS = {
   TRIGGER_SERVICE: "TRIGGER_SERVICE",
   TRIGGER_ACTION: "TRIGGER_ACTION",
   TRIGGER_CONFIG: "TRIGGER_CONFIG",
+
   REACTION_SERVICE: "REACTION_SERVICE",
   REACTION_ACTION: "REACTION_ACTION",
   REACTION_CONFIG: "REACTION_CONFIG",
+
+  WORKFLOW_NAME: "WORKFLOW_NAME",
 };
 
 export default function WorkflowCreation({ goTo }) {
@@ -28,31 +36,31 @@ export default function WorkflowCreation({ goTo }) {
 
   const [triggerService, setTriggerService] = useState(null);
   const [triggerAction, setTriggerAction] = useState(null);
-  const [triggerConfig, setTriggerConfig] = useState("");
+  const [triggerConfig, setTriggerConfig] = useState({});
 
   const [reactionService, setReactionService] = useState(null);
   const [reactionAction, setReactionAction] = useState(null);
-  const [reactionConfig, setReactionConfig] = useState("");
+  const [reactionConfig, setReactionConfig] = useState({});
 
-  const buildPayload = () => ({
-    trigger: {
-      serviceId: triggerService.id,
-      actionId: triggerAction.id,
-      config: triggerConfig,
-    },
-    reaction: {
-      serviceId: reactionService.id,
-      actionId: reactionAction.id,
-      config: reactionConfig,
-    },
-  });
+  const [workflowName, setWorkflowName] = useState("");
 
   const handleCreate = async () => {
-    const payload = buildPayload();
-    // TODO: requête API -- oui y est
+    try {
+      await api.createArea({
+        name: workflowName,
+        user_id: localStorage.getItem("user_id"),
+        action_id: triggerAction.id,
+        reaction_id: reactionAction.id,
+        parameters: {
+          trigger: triggerConfig,
+          reaction: reactionConfig,
+        },
+      });
 
-    if (goTo) {
       goTo("workflowResume");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create workflow");
     }
   };
 
@@ -133,7 +141,17 @@ export default function WorkflowCreation({ goTo }) {
           value={reactionConfig}
           onBack={() => setStep(STEPS.REACTION_ACTION)}
           onChange={setReactionConfig}
-          onCreate={handleCreate}
+          onNext={() => setStep(STEPS.WORKFLOW_NAME)} // ✅
+        />
+      );
+      break;
+
+    case STEPS.WORKFLOW_NAME:
+      screen = (
+        <WorkflowName
+          workflowName={workflowName}
+          setWorkflowName={setWorkflowName}
+          onConfirm={handleCreate}
         />
       );
       break;
@@ -150,6 +168,7 @@ export default function WorkflowCreation({ goTo }) {
         active="create"
         onNavigate={(tab) => {
           if (!goTo) return;
+
           if (tab === "list") goTo("workflowResume");
           else if (tab === "create") goTo("workflowCreation");
           else if (tab === "profile") goTo("profile");

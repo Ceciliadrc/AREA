@@ -1,55 +1,48 @@
 /*
 ** EPITECH PROJECT, 2025
-** web [WSL: Ubuntu]
+** PROJECT_MIRROR [WSL: Ubuntu]
 ** File description:
 ** WorkflowTriggerAction.jsx
 */
 
+import { useEffect, useState } from "react";
 import AppLayout from "../../components/layout/AppLayout";
 import { PageTitle } from "../../components/ui/PageTitle";
+import api from "../../apiFetcher/api";
 
-export default function WorkflowTriggerAction({
-    service,
-    value,
-    onBack,
-    onSelect,
-}) {
-    const placeholderActions = [
-        { id: "new_pull_request", name: "New Pull Request" },
-        { id: "new_issue", name: "New Issue" },
-        { id: "push_to_branch", name: "Push To Branch" },
-    ];
+export default function WorkflowTriggerAction({ service, value, onBack, onSelect }) {
+    const [actions, setActions] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const actions = placeholderActions; //TODO: requête api qui récupère la liste des actions du service -- ça y est
+    useEffect(() => {
+        if (!service?.id) return;
+
+        const loadActions = async () => {
+            try {
+                const data = await api.getServiceActions(service.id);
+                setActions(data);
+            } catch (err) {
+                console.error("Failed to load actions", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadActions();
+    }, [service]);
 
     return (
         <AppLayout>
-            <div
-                style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    paddingTop: 60,
-                }}
-            >
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 60 }}>
                 <div onClick={onBack} style={{ color: "black", alignSelf: "flex-start", cursor: "pointer" }}>
                     ← Back
                 </div>
 
                 <PageTitle>Choose the action for {service?.name}</PageTitle>
 
-                <div
-                    style={{
-                        display: "flex",
-                        color: "black",
-                        flexDirection: "column",
-                        gap: 24,
-                        marginTop: 40,
-                        width: "100%",
-                        maxWidth: 600,
-                    }}
-                >
+                {loading && <p>Loading actions…</p>}
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40, width: "100%", maxWidth: 600 }}>
                     {actions.map((action) => (
                         <button
                             key={action.id}
@@ -61,7 +54,6 @@ export default function WorkflowTriggerAction({
                                 border: "2px solid #C47A9E",
                                 background: "transparent",
                                 cursor: "pointer",
-                                textAlign: "center",
                             }}
                         >
                             {action.name}

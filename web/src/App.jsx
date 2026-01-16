@@ -14,8 +14,8 @@ import WorkflowCreation from "./pages/workflowCreation/WorkflowCreation";
 import AdminPanel from "./pages/AdminPanel"
 
 function App() {
-  const [page, setPage] = useState("login");
-  // const [page, setPage] = useState("adminPanel");
+  // const [page, setPage] = useState("login");
+  const [page, setPage] = useState("profile");
 
   return (
     <>
