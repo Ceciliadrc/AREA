@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.area.data.repository.RepositoryManager
 import com.example.area.data.repository.ServiceRepository
 import com.example.area.ui.components.*
 import com.example.area.ui.theme.*
@@ -27,7 +28,7 @@ fun ActionScreen(
 
     LaunchedEffect(Unit) {
         scope.launch {
-            val serviceRepository = ServiceRepository(context)
+            val serviceRepository = RepositoryManager.getServiceRepository(context)
             val result = serviceRepository.getAllServices()
 
             isLoading = false

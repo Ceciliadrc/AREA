@@ -33,6 +33,8 @@ object ApiClient {
         sharedPrefs.saveServerUrl(newUrl)
 
         retrofit = createRetrofit(newUrl)
+
+        com.example.area.data.repository.RepositoryManager.clearRepositories()
     }
 
     fun getCurrentBaseUrl(context: Context): String {

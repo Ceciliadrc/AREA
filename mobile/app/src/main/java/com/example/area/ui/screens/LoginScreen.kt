@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import com.example.area.data.repository.AuthRepository
+import com.example.area.data.repository.RepositoryManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -41,7 +42,7 @@ fun LoginScreen (
     var showServerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val authRepository = remember { AuthRepository(context) }
+    val authRepository = remember { RepositoryManager.getAuthRepository(context) }
 
     ServerConfigDialog(
         isVisible = showServerDialog,

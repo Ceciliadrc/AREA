@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.example.area.data.repository.AuthRepository
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.focus.focusModifier
+import com.example.area.data.repository.RepositoryManager
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +45,7 @@ fun RegisterScreen(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val authRepository = remember { AuthRepository(context) }
+    val authRepository = remember { RepositoryManager.getAuthRepository(context) }
 
     ServerConfigDialog(
         isVisible = showServerDialog,
