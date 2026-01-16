@@ -7,12 +7,13 @@ from .auth import router as auth_router
 from .areas import router as areas_router
 from .services import router as services_router
 from sqlalchemy import exc
-# from app.hook import hook
-# from .authSpotify import router as spotify_auth_router
-from .authGoogle import router as google_auth_router
+from app.hook import hook
 from .authTwitch import router as twitch_auth_router
-# from .authNotion import router as notion_auth_router
-# from .authInsta import router as insta_auth_router
+from .authNotion import router as notion_auth_router
+from .authDropbox import router as dropbox_auth_router
+from .authOpenAi import router as openAi_auth_router
+from .authGithub import router as github_auth_router
+from .authGoogle import router as google_auth_router
 from .init_all_services import init_services
 
 def wait_for_db():
@@ -27,8 +28,8 @@ def wait_for_db():
 if wait_for_db():
    models.Base.metadata.create_all(bind=database.engine)
    init_services()
-#    hook.start()
-#    print("hook démarré")
+   hook.start()
+   print("hook démarré")
 
 app = FastAPI()
 
@@ -46,11 +47,12 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(areas_router)
 app.include_router(services_router)
-# app.include_router(spotify_auth_router)
 app.include_router(google_auth_router)
 app.include_router(twitch_auth_router)
-# app.include_router(notion_auth_router)
-# app.include_router(insta_auth_router)
+app.include_router(notion_auth_router)
+app.include_router(dropbox_auth_router)
+app.include_router(openAi_auth_router)
+app.include_router(github_auth_router)
 
 @app.get("/")
 async def root():

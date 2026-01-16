@@ -60,3 +60,4 @@ class UserOauth(Base):
     service_id = Column(Integer, ForeignKey("services.id"))
     access_token = Column(String, nullable=True)
     refresh_token = Column(String, nullable=True)
+    provider_user_id = Column(String)

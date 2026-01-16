@@ -17,8 +17,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
-    volumes:
-      - ./.env:/app/.env
+    # volumes:
+    #   - ./.env:/app/.env
     networks:
       - back-tier
     ports: # application server on port 8080

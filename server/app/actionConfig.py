@@ -1,16 +1,24 @@
 ACTION_CONFIGS = {
-    "spotify": {
-        "user_has_created_new_playlist": {
-            "fields": []
-        }
-    },
-    "instagram": {
-        "receive_message_from": {
+    "github": {
+        "new_push": {
             "fields": [
                 {
-                    "name": "from_username",
+                    "name": "repository",
                     "type": "text",
-                    "label": "Nom d'utilisateur Instagram",
+                    "label": "Repository (format: owner/repo)",
+                    "required": True
+                },
+            ]
+        }
+    },
+    "dropbox": {
+        "new_file": {
+            "fields": [
+                {
+                    "name": "folder_path",
+                    "type": "text",
+                    "label": "Folder to watch",
+                    "required": True
                 }
             ]
         }
@@ -21,7 +29,8 @@ ACTION_CONFIGS = {
                 {
                     "name": "streamer_name",
                     "type": "text",
-                    "label": "Nom du streamer",
+                    "label": "Nom du streamer Twitch",
+                    "required": True
                 }
             ]
         }
@@ -33,6 +42,7 @@ ACTION_CONFIGS = {
                     "name": "question",
                     "type": "textarea",
                     "label": "Question à poser",
+                    "required": True
                 }
             ]
         },
@@ -42,20 +52,19 @@ ACTION_CONFIGS = {
                     "name": "file_url",
                     "type": "url",
                     "label": "URL du fichier",
+                    "required": True
                 }
             ]
         }
     },
     "notion": {
-        "user_mentioned": {
-            "fields": []
-        },
         "new_page_created": {
             "fields": [
                 {
                     "name": "database_id",
                     "type": "text",
                     "label": "ID de la base de données",
+                    "required": True
                 }
             ]
         }
@@ -71,6 +80,7 @@ ACTION_CONFIGS = {
                 {
                     "name": "subject_contains",
                     "type": "text",
+                    "label": "Sujet contient",
                 }
             ]
         },
@@ -78,54 +88,62 @@ ACTION_CONFIGS = {
 }
 
 REACTION_CONFIGS = {
-    "spotify": {
-        "add_track_to_playlist": {
+    "github": {
+        "create_issue": {
             "fields": [
                 {
-                    "name": "playlist_id",
+                    "name": "repository",
                     "type": "text",
-                    "label": "ID de la playlist Spotify"
+                    "label": "Repository (format: owner/repo)",
+                    "required": True
                 },
                 {
-                    "name": "track_name",
+                    "name": "title",
                     "type": "text",
-                    "label": "Nom de la musique"
+                    "label": "Issue title",
+                    "required": True
                 },
                 {
-                    "name": "artist",
-                    "type": "text",
-                    "label": "Artiste"
-                }
-            ]
-        },
-        "create_playlist": {
-            "fields": [
-                {
-                    "name": "playlist_name",
-                    "type": "text",
-                    "label": "Nom de la nouvelle playlist"
+                    "name": "body",
+                    "type": "textarea",
+                    "label": "Issue description",
                 }
             ]
         }
     },
-    "instagram": {
-        "send_message_to": {
+    "dropbox": {
+        "upload_file": {
             "fields": [
                 {
-                    "name": "to_username",
+                    "name": "file_path",
                     "type": "text",
-                    "label": "Destinataire"
+                    "label": "File path",
+                    "required": True
                 },
                 {
-                    "name": "message",
-                    "type": "textarea"
+                    "name": "content",
+                    "type": "textarea",
+                    "label": "File content",
                 }
             ]
         }
     },
     "twitch": {
-        "suggest_random_stream": {
-            "fields": []
+        "send_chat_message": {
+            "fields": [
+                {
+                    "name": "channel",
+                    "type": "text",
+                    "label": "Channel Twitch",
+                    "required": True
+                },
+                {
+                    "name": "message", 
+                    "type": "textarea",
+                    "label": "Message à envoyer",
+                    "required": True
+                }
+            ]
         }
     },
     "openai": {
@@ -154,12 +172,13 @@ REACTION_CONFIGS = {
                 {
                     "name": "content",
                     "type": "textarea",
-                    "label": "Contenu"
+                    "label": "Contenu",
                 },
                 {
                     "name": "database_id",
                     "type": "text",
-                    "label": "ID de la base de données"
+                    "label": "ID de la base de données",
+                    "required": True
                 }
             ]
         }
@@ -170,17 +189,19 @@ REACTION_CONFIGS = {
                 {
                     "name": "to_email",
                     "type": "email",
-                    "label": "Destinataire"
+                    "label": "Destinataire",
+                    "required": True
                 },
                 {
                     "name": "subject",
                     "type": "text",
-                    "label": "Sujet"
+                    "label": "Sujet",
+                    "required": True
                 },
                 {
                     "name": "body",
                     "type": "textarea",
-                    "label": "Message"
+                    "label": "Message",
                 }
             ]
         }

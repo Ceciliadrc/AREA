@@ -4,12 +4,12 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app import models
 
-from .handlers.spotifyHandler import spotifyHandler
-from .handlers.instagramHandler import instagramHandler
-from .handlers.gmailHandler import gmailHandler
-from .handlers.notionHandler import notionHandler
-from .handlers.twitchHandler import twitchHandler
-from .handlers.openAiHandler import openAIHandler
+from .handlers.gmailHandler import GmailHandler
+from .handlers.notionHandler import NotionHandler
+from .handlers.twitchHandler import TwitchHandler
+from .handlers.openAiHandler import OpenAiHandler
+from .handlers.githubHandler import GithubHandler
+from .handlers.dropBoxHandler import DropboxHandler
 
 class Hook:
     def __init__(self):
@@ -17,12 +17,12 @@ class Hook:
         self.thread = None
 
         self.handlers = {
-            "spotify": spotifyHandler(),
-            "instagram": instagramHandler(),
-            "google": gmailHandler(),
-            "notion": notionHandler(),
-            "twitch": twitchHandler(),
-            "openai": openAIHandler(),
+            "google": GmailHandler(),
+            "notion": NotionHandler(),
+            "twitch": TwitchHandler(),
+            "openai": OpenAiHandler(),
+            "github": GithubHandler(),
+            "dropbox": DropboxHandler(),
         }
     def get_handler(self, service_name: str):
         return self.handlers.get(service_name)
