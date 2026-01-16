@@ -1,4 +1,4 @@
-from app import models, database
+from app import models, database, security
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .actionConfig import ACTION_CONFIGS, REACTION_CONFIGS
@@ -82,4 +82,36 @@ def get_reaction_config(service_name: str, reaction_name: str):
         "service": service_name,
         "reaction": reaction_name,
         **config
+    }
+
+@router.get("/users/{user_id}/credentials")
+def get_user_credentials(user_id: int,db: Session = Depends(database.get_db),current_user: models.User = Depends(security.active_user)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # recupere services connecte
+    user_tokens = db.query(models.UserOauth).filter(models.UserOauth.user_id == user_id).all()
+    
+    credentials = []
+    for token in user_tokens:
+        service = db.query(models.Service).filter(
+            models.Service.id == token.service_id
+        ).first()
+        
+        if service:
+            credentials.append({
+                "service_id": service.id,
+                "service_name": service.name,
+                "display_name": service.display_name,
+                "connected": True,
+                "has_token": bool(token.access_token),
+                "provider_user_id": token.provider_user_id
+            })
+    return {
+        "user_id": user_id,
+        "username": user.username,
+        "email": user.email,
+        "connected_services": credentials,
+        "total_connected": len(credentials)
     }

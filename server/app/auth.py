@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app import models, database, security
-from app.schemas import UserRegister, UserLogin
+from app.schemas import UserRegister, UserLogin, UserUpdate
 from datetime import timedelta
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -85,6 +85,12 @@ def get_my_role(current_user: models.User = Depends(security.active_user)):
             else False
     }
 
+@router.get("/admin/contact-email")
+def get_contact_email():
+    return {
+        "contact": "nanabasave@gmail.com",
+    }
+
 @router.get("/users/", dependencies= [Depends(security.require_admin)])
 def get_all_users(db: Session = Depends(database.get_db)):
     users = db.query(models.User).all()
@@ -110,6 +116,50 @@ def delete_user(user_id: int, db: Session = Depends(database.get_db)):
     db.commit()
     return {"message": f"User {user_id} deleted"}
 
+@router.put("/users/{user_id}")
+def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(database.get_db), current_user: models.User = Depends(security.active_user)):
+    if current_user.id != user_id and current_user.role != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Not authorized to update this user"
+        )
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user_data.email and user_data.email != user.email:
+        existing_email = db.query(models.User).filter(models.User.email == user_data.email).first()
+        if existing_email:
+            raise HTTPException(
+                status_code=400,
+                detail="Email already in use"
+            )
+        user.email = user_data.email
+    
+    if user_data.username and user_data.username != user.username:
+        existing_username = db.query(models.User).filter(models.User.username == user_data.username).first()
+        if existing_username:
+            raise HTTPException(
+                status_code=400,
+                detail="Username already in use"
+            )
+        user.username = user_data.username
+    
+    if user_data.password:
+        hashed_password = security.hash_password(user_data.password)
+        user.password = hashed_password
+    
+    db.commit()
+    db.refresh(user)
+    return {
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        }
+    }
+
 @router.put("/users/{user_id}/role")
 def update_user_role(user_id: int, new_role: str, db: Session = Depends(database.get_db)):
 
@@ -124,3 +174,29 @@ def update_user_role(user_id: int, new_role: str, db: Session = Depends(database
     user.role = new_role
     db.commit()
     return {"message": f"User {user_id} role updated to {new_role}"}
+
+@router.get("/users/{user_id}/credentials")
+def get_user_credentials(user_id: int,db: Session = Depends(database.get_db), current_user: models.User = Depends(security.active_user)):
+    user_tokens = db.query(models.UserOauth).filter(models.UserOauth.user_id == user_id).all()
+    
+    if current_user.id != user_id and current_user.role != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Not authorized to update this user"
+        )
+    credentials = []
+    for token in user_tokens:
+        service = db.query(models.Service).filter(models.Service.id == token.service_id).first()
+        
+        if service:
+            credentials.append({
+                "service_name": service.name,
+                "display_name": service.display_name,
+                "connected": True,
+                "has_token": bool(token.access_token)
+            })
+    return {
+        "user_id": user_id,
+        "connected_services": credentials,
+        "total_connected": len(credentials)
+    }

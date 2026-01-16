@@ -66,7 +66,7 @@ class OauthDbConfig:
             {"name": "google", "display_name": "Google"},
             {"name": "twitch", "display_name": "Twitch"},
             {"name": "notion", "display_name": "Notion"},
-            {"name": "openai", "display_name": "Openai"},
+            {"name": "trello", "display_name": "Trello"},
             {"name": "github", "display_name": "Github"},
             {"name": "dropbox", "display_name": "Drop box"},
         ]

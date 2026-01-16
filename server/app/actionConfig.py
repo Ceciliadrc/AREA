@@ -7,7 +7,7 @@ ACTION_CONFIGS = {
                     "type": "text",
                     "label": "Repository (format: owner/repo)",
                     "required": True
-                },
+                }
             ]
         }
     },
@@ -29,30 +29,31 @@ ACTION_CONFIGS = {
                 {
                     "name": "streamer_name",
                     "type": "text",
-                    "label": "Nom du streamer Twitch",
+                    "label": "Twitch streamer name",
                     "required": True
                 }
             ]
         }
     },
-    "openai": {
-        "ask_question": {
+    "trello": {
+        "new_card": {
             "fields": [
                 {
-                    "name": "question",
-                    "type": "textarea",
-                    "label": "Question à poser",
+                    "name": "board_name",
+                    "type": "text",
+                    "label": "Trello Board Name",
                     "required": True
                 }
             ]
         },
-        "upload_file": {
+        "card_archived": {
             "fields": [
                 {
-                    "name": "file_url",
-                    "type": "url",
-                    "label": "URL du fichier",
-                    "required": True
+                    "name": "board_name",
+                    "type": "text",
+                    "label": "Board Name",
+                    "required": True,
+                    "description": "Watch for archived cards in this board"
                 }
             ]
         }
@@ -63,7 +64,7 @@ ACTION_CONFIGS = {
                 {
                     "name": "database_id",
                     "type": "text",
-                    "label": "ID de la base de données",
+                    "label": "Database ID",
                     "required": True
                 }
             ]
@@ -75,15 +76,27 @@ ACTION_CONFIGS = {
                 {
                     "name": "from_email",
                     "type": "email",
-                    "label": "Expéditeur spécifique",
+                    "label": "Specific sender",
+                    "required": False
                 },
                 {
                     "name": "subject_contains",
                     "type": "text",
-                    "label": "Sujet contient",
+                    "label": "Subject contains",
+                    "required": False
                 }
             ]
         },
+        "important_email": {
+            "fields": [
+                {
+                    "name": "from_email",
+                    "type": "email",
+                    "label": "Specific sender",
+                    "required": False
+                }
+            ]
+        }
     }
 }
 
@@ -107,6 +120,7 @@ REACTION_CONFIGS = {
                     "name": "body",
                     "type": "textarea",
                     "label": "Issue description",
+                    "required": False
                 }
             ]
         }
@@ -124,6 +138,7 @@ REACTION_CONFIGS = {
                     "name": "content",
                     "type": "textarea",
                     "label": "File content",
+                    "required": True
                 }
             ]
         }
@@ -134,28 +149,63 @@ REACTION_CONFIGS = {
                 {
                     "name": "channel",
                     "type": "text",
-                    "label": "Channel Twitch",
+                    "label": "Twitch channel",
                     "required": True
                 },
                 {
                     "name": "message", 
                     "type": "textarea",
-                    "label": "Message à envoyer",
+                    "label": "Message to send",
                     "required": True
                 }
             ]
         }
     },
-    "openai": {
-        "get_answer": {
-            "fields": []
-        },
-        "process_file": {
+    "trello": {
+        "create_card": {
             "fields": [
                 {
-                    "name": "action",
+                    "name": "board_name",
+                    "type": "text",
+                    "label": "Board to create card in",
+                    "required": True
+                },
+                {
+                    "name": "card_title", 
+                    "type": "text",
+                    "label": "Card title",
+                    "required": True
+                }
+            ]
+        },
+        "add_label": {
+            "fields": [
+                {
+                    "name": "board_name",
+                    "type": "text",
+                    "label": "Trello Board",
+                    "required": True
+                },
+                {
+                    "name": "card_name",
+                    "type": "text",
+                    "label": "Card Name",
+                    "required": True,
+                    "description": "Exact name of the card to label"
+                },
+                {
+                    "name": "label_name",
+                    "type": "text",
+                    "label": "Label name",
+                    "required": True
+                },
+                {
+                    "name": "label_color",
                     "type": "select",
-                    "label": "Action à effectuer",
+                    "label": "Color",
+                    "options": ["red", "green", "blue", "yellow", "purple", "orange"],
+                    "required": True,
+                    "default": "green"
                 }
             ]
         }
@@ -166,18 +216,19 @@ REACTION_CONFIGS = {
                 {
                     "name": "title",
                     "type": "text",
-                    "label": "Titre de la page",
+                    "label": "Page title",
                     "required": True
                 },
                 {
                     "name": "content",
                     "type": "textarea",
-                    "label": "Contenu",
+                    "label": "Content",
+                    "required": False
                 },
                 {
                     "name": "database_id",
                     "type": "text",
-                    "label": "ID de la base de données",
+                    "label": "Database ID",
                     "required": True
                 }
             ]
@@ -189,19 +240,20 @@ REACTION_CONFIGS = {
                 {
                     "name": "to_email",
                     "type": "email",
-                    "label": "Destinataire",
+                    "label": "Recipient",
                     "required": True
                 },
                 {
                     "name": "subject",
                     "type": "text",
-                    "label": "Sujet",
+                    "label": "Subject",
                     "required": True
                 },
                 {
                     "name": "body",
                     "type": "textarea",
                     "label": "Message",
+                    "required": True
                 }
             ]
         }

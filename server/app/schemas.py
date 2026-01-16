@@ -27,6 +27,14 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+
 class AreaBase(BaseModel):
     name: str
     user_id: int

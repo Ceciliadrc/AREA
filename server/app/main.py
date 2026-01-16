@@ -53,7 +53,6 @@ app.include_router(notion_auth_router)
 app.include_router(dropbox_auth_router)
 app.include_router(github_auth_router)
 app.include_router(trello_auth_router)
-
 @app.get("/")
 async def root():
     return {"message": "API is working"}

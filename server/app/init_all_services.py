@@ -5,115 +5,115 @@ def init_services():
     db = SessionLocal()
 
     all_services = [
-        {
-            "name": "github",
-            "display_name": "GitHub",
-            "actions": [
-                {
-                    "name": "new_push",
-                    "description": "New push to a repository"
-                }
-            ],
-            "reactions": [
-                {
-                    "name": "create_issue",
-                    "description": "Create a new issue"
-                }
-            ]
-        },
-        {
-            "name": "dropbox",
-            "display_name": "Dropbox",
-            "actions": [
-                {
-                    "name": "new_file",
-                    "description": "A new file is added"
-                }
-            ],
-            "reactions": [
-                {
-                    "name": "upload_file",
-                    "description": "Upload a file"
-                }
-            ]
-        },
-        {
-            "name": "twitch",
-            "display_name": "Twitch",
-            "actions": [
-                {
-                    "name": "favorite_streamer_live",
-                    "description": "Recieve a notification when your favoritte streamer live"
-                }
-            ],
-            "reactions": [
-                {
-                    "name": "send_chat_message",
-                    "description": "Send a message to a Twitch channel"
-                }
-            ]
-        },
-        {
-            "name": "openai",
-            "display_name": "OpenAI",
-            "actions": [
-                {
-                    "name": "ask_question",
-                    "description": "Ask a question to the AI"
-                },
-                {
-                    "name": "upload_file",
-                    "description": "Upload a file for processing"
-                }
-            ],
-            "reactions": [
-                {
-                    "name": "get_answer",
-                    "description": "Get an answer from the AI"
-                },
-                {
-                    "name": "process_file",
-                    "description": "Process an uploaded file"
-                }
-            ]
-        },
-        {
-            "name": "notion",
-            "display_name": "Notion",
-            "actions": [
-                {
-                    "name": "new_page_created",
-                    "description": "A new page is created in your workspace"
-                }
-            ],
-            "reactions": [
-                {
-                    "name": "create_page",
-                    "description": "Create a new page in Notion"
-                }
-            ]
-        },
-        {
-            "name": "google",
-            "display_name": "Gmail",
-            "actions": [
-                {
-                    "name": "new_email",
-                    "description": "Receive a new email"
-                },
-                {
-                    "name": "important_email",
-                    "description": "Receive an important email"
-                }
-            ],
-            "reactions": [
-                {
-                    "name": "send_email",
-                    "description": "Send an email to a recipient"
-                }
-            ]
-        }
-    ]
+    {
+    "name": "github",
+        "display_name": "GitHub",
+        "actions": [
+            {
+                "name": "new_push",
+                "description": "New push to a repository"
+            }
+        ],
+        "reactions": [
+            {
+                "name": "create_issue",
+                "description": "Create a new issue"
+            }
+        ]
+    },
+    {
+    "name": "dropbox",
+        "display_name": "Dropbox",
+        "actions": [
+            {
+                "name": "new_file",
+                "description": "A new file is added"
+            }
+        ],
+        "reactions": [
+            {
+                "name": "upload_file",
+                "description": "Upload a file"
+            }
+        ]
+    },
+    {
+    "name": "twitch",
+        "display_name": "Twitch",
+        "actions": [
+            {
+                "name": "favorite_streamer_live",
+                "description": "Recieve a notification when your favorite streamer live"
+            }
+        ],
+        "reactions": [
+            {
+                "name": "send_chat_message",
+                "description": "Send a message to a Twitch channel"
+            }
+        ]
+    },
+    {
+    "name": "trello",
+        "display_name": "Trello",
+        "actions": [
+            {
+                "name": "new_card",
+                "description": "A new card is created on a board"
+            },
+            {
+                "name": "card_archived",
+                "description": "A card is archived"
+            }
+        ],
+        "reactions": [
+            {
+                "name": "create_card",
+                "description": "Create a new card"
+            },
+            {
+                "name": "add_label",
+                "description": "Add a label to a card"
+            }
+        ]
+    },
+    {
+    "name": "notion",
+        "display_name": "Notion",
+        "actions": [
+            {
+                "name": "new_page_created",
+                "description": "A new page is created in your workspace"
+            }
+        ],
+        "reactions": [
+            {
+                "name": "create_page",
+                "description": "Create a new page in Notion"
+            }
+        ]
+    },
+    {
+    "name": "google",
+        "display_name": "Gmail",
+        "actions": [
+            {
+                "name": "new_email",
+                "description": "Receive a new email"
+            },
+            {
+                "name": "important_email",
+                "description": "Receive an important email"
+            }
+        ],
+        "reactions": [
+            {
+                "name": "send_email",
+                "description": "Send an email to a recipient"
+            }
+        ]
+    }
+]
     created = 0
     for config in all_services:
         service_name = config["name"]
