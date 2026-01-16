@@ -6,38 +6,34 @@ def init_services():
 
     all_services = [
         {
-            "name": "spotify",
-            "display_name": "Spotify",
+            "name": "github",
+            "display_name": "GitHub",
             "actions": [
                 {
-                    "name": "user_has_created_new_playlist",
-                    "description": "Check if a new playlist is created by the user"
+                    "name": "new_push",
+                    "description": "New push to a repository"
                 }
             ],
             "reactions": [
                 {
-                    "name": "add_track_to_playlist",
-                    "description": "Add a track to a playlist"
-                },
-                {
-                    "name": "create_playlist",
-                    "description": "Create a new playlist"
+                    "name": "create_issue",
+                    "description": "Create a new issue"
                 }
             ]
         },
         {
-            "name": "instagram",
-            "display_name": "Instagram",
+            "name": "dropbox",
+            "display_name": "Dropbox",
             "actions": [
                 {
-                    "name": "receive_message_from",
-                    "description": "Receive a message from a specific user"
+                    "name": "new_file",
+                    "description": "A new file is added"
                 }
             ],
             "reactions": [
                 {
-                    "name": "send_message_to",
-                    "description": "Send a message to a specific user"
+                    "name": "upload_file",
+                    "description": "Upload a file"
                 }
             ]
         },
@@ -52,8 +48,8 @@ def init_services():
             ],
             "reactions": [
                 {
-                    "name": "suggest_random_stream",
-                    "description": "Suggest a live stream to watch"
+                    "name": "send_chat_message",
+                    "description": "Send a message to a Twitch channel"
                 }
             ]
         },
@@ -85,10 +81,6 @@ def init_services():
             "name": "notion",
             "display_name": "Notion",
             "actions": [
-                {
-                    "name": "user_mentioned",
-                    "description": "Get mentioned in a Notion page"
-                },
                 {
                     "name": "new_page_created",
                     "description": "A new page is created in your workspace"

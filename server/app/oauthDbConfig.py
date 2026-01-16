@@ -24,7 +24,8 @@ class OauthDbConfig:
         user_id: int,
         service_id: int,
         access_token: str,
-        refresh_token: str = None
+        refresh_token: str = None,
+        provider_user_id: str = None
     ):
         token_exist = db.query(models.UserOauth).filter(
             models.UserOauth.user_id == user_id,
@@ -34,12 +35,15 @@ class OauthDbConfig:
         if token_exist:
             token_exist.access_token = access_token
             token_exist.refresh_token = refresh_token or token_exist.refresh_token
+            if provider_user_id:
+                token_exist.provider_user_id = provider_user_id
         else:
             new_token = models.UserOauth(
                     user_id = user_id,
                     service_id = service_id,
                     access_token = access_token,
-                    refresh_token = refresh_token
+                    refresh_token = refresh_token,
+                    provider_user_id = provider_user_id
             )
             db.add(new_token)
         db.commit()
@@ -60,11 +64,11 @@ class OauthDbConfig:
     def default_service(db: Session):
         default_init = [
             {"name": "google", "display_name": "Google"},
-            {"name": "spotify", "display_name": "Spotify"},
             {"name": "twitch", "display_name": "Twitch"},
             {"name": "notion", "display_name": "Notion"},
-            {"name": "instagram", "display_name": "Instagram"},
             {"name": "openai", "display_name": "Openai"},
+            {"name": "github", "display_name": "Github"},
+            {"name": "dropbox", "display_name": "Drop box"},
         ]
 
         for data in default_init:

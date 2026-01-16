@@ -10,22 +10,28 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from urllib.parse import urlencode
 import httpx
-from app import oauthDbConfig, database, models
+import os
+from app import database, models
+
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
+class GoogleOAuthConfig:
+    client_id = os.getenv("GOOGLE_CLIENT_ID")
+    client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
+    redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
+
 @router.get("/google/login")
-def logWithGoogle(user_id: int, db: Session = Depends(database.get_db)):
-    config = oauthDbConfig.OauthDbConfig.get_service(db, "google")
-    if not config:
-        raise HTTPException(500, "Google oauth not configured")
+def logWithGoogle(user_id: int):
+    if not GoogleOAuthConfig.client_id or not GoogleOAuthConfig.client_secret:
+        raise HTTPException(500, "Google OAuth not configured in .env")
 
     params = {
-        "client_id": config.client_id,
-        "redirect_uri": config.redirect_uri,
+        "client_id": GoogleOAuthConfig.client_id,
+        "redirect_uri": GoogleOAuthConfig.redirect_uri,
         "response_type": "code",
         "scope": "openid email profile",
         "access_type": "offline",
@@ -36,13 +42,10 @@ def logWithGoogle(user_id: int, db: Session = Depends(database.get_db)):
     google_url = f"{GOOGLE_AUTH_URL}?{urlencode(params)}"
     return RedirectResponse(google_url)
 
-
 @router.get("/google/callback")
-async def google_callback(state: str, code: str, user_id: int, db: Session = Depends(database.get_db)):
-
-    config = oauthDbConfig.OauthDbConfig.get_service(db, "google")
-    if not config:
-        raise HTTPException(500, "Google oauth not configured")
+async def google_callback(state: str, code: str, db: Session = Depends(database.get_db)):
+    if not GoogleOAuthConfig.client_id or not GoogleOAuthConfig.client_secret:
+        raise HTTPException(500, "Google OAuth not configured in .env")
     
     user_id = int(state)
 
@@ -51,11 +54,11 @@ async def google_callback(state: str, code: str, user_id: int, db: Session = Dep
             GOOGLE_TOKEN_URL,
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             data=urlencode({
-                "client_id": config.client_id,
-                "client_secret": config.client_secret,
+                "client_id": GoogleOAuthConfig.client_id,
+                "client_secret": GoogleOAuthConfig.client_secret,
                 "code": code,
                 "grant_type": "authorization_code",
-                "redirect_uri": config.redirect_uri
+                "redirect_uri": GoogleOAuthConfig.redirect_uri
             })
         )
 
@@ -66,26 +69,18 @@ async def google_callback(state: str, code: str, user_id: int, db: Session = Dep
 
     service = db.query(models.Service).filter(models.Service.name == "google").first()
 
-    oauthDbConfig.OauthDbConfig.save_user(
-        db = db,
-        user_id = user_id,
-        service_id = service.id,
-        access_token = tokens["access_token"],
-        refresh_token = tokens.get("refresh_token")
+    from app.oauthDbConfig import OauthDbConfig
+    OauthDbConfig.save_user(
+        db=db,
+        user_id=user_id,
+        service_id=service.id,
+        access_token=tokens["access_token"],
+        refresh_token=tokens.get("refresh_token")
     )
 
     headers = {"Authorization": f"Bearer {tokens['access_token']}"}
 
-    async with httpx.AsyncClient() as client:
-        user_info = await client.get(GOOGLE_USERINFO_URL, headers=headers)
-
-    if user_info.status_code != 200:
-        raise HTTPException(400, "Google Error")
-
-    google_user = user_info.json()
-
     return {
         "message": "Google login success!",
-        "google_user": google_user,
         "tokens": tokens
     }

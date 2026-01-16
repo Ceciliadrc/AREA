@@ -1,14 +1,12 @@
 import httpx
-import base64
+import json
 from sqlalchemy.orm import Session
-from email.mime.text import MIMEText
-from typing import Dict
 from app import models, oauthDbConfig
 
-class GmailHandler:
+class DropboxHandler:
     def __init__(self):
-        self.service_name = "google"
-        self.api_base = "https://gmail.googleapis.com/gmail/v1/users/me"
+        self.service_name = "dropbox"
+        self.api_base = "https://api.dropboxapi.com/2"
     
     def get_auth(self, user_id: int, db: Session):
         user_token = oauthDbConfig.OauthDbConfig.get_user(db, user_id, self.service_name)
@@ -17,7 +15,7 @@ class GmailHandler:
         return None
     
     def check_action(self, action: models.Action, user_id: int, db: Session) -> bool:
-        if action.name != "new_email":
+        if action.name != "new_file":
             return False
         
         auth = self.get_auth(user_id, db)
@@ -33,46 +31,43 @@ class GmailHandler:
         
         for area in areas:
             params = area.parameters or {}
+            folder_path = params.get("folder_path")
             
-            query = "is:unread"
-            if params.get("from_email"):
-                query += f" from:{params['from_email']}"
-            
-            if params.get("subject_contains"):
-                query += f" subject:{params['subject_contains']}"
+            if not folder_path:
+                continue
             
             try:
-                response = httpx.get(
-                    f"{self.api_base}/messages",
+                response = httpx.post(
+                    f"{self.api_base}/files/list_folder",
                     headers=headers,
-                    params={"q": query, "maxResults": 5},
+                    json={"path": folder_path, "limit": 50},
                     timeout=10.0
                 )
                 
                 if response.status_code != 200:
                     continue
                 
-                emails_data = response.json().get("messages", [])
-                current_email_ids = [email["id"] for email in emails_data]
+                current_files = response.json().get("entries", [])
+                current_ids = [f["id"] for f in current_files if f[".tag"] == "file"]
                 
-                previous_ids = params.get("previous_emails", [])
+                previous_ids = params.get("previous_file_ids", [])
                 
                 if not previous_ids:
-                    params["previous_emails"] = current_email_ids
+                    params["previous_file_ids"] = current_ids
                     area.parameters = params
                     db.commit()
                     continue
                 
-                new_ids = [email_id for email_id in current_email_ids if email_id not in previous_ids]
+                new_ids = [file_id for file_id in current_ids if file_id not in previous_ids]
                 
                 if new_ids:
-                    params["previous_emails"] = current_email_ids
-                    params["new_email_ids"] = new_ids
+                    params["detected_files"] = new_ids
+                    params["previous_file_ids"] = current_ids
                     area.parameters = params
                     action_detected = True
                     
             except Exception as e:
-                print(f"Gmail error: {e}")
+                print(f"Dropbox error: {e}")
                 continue
         
         if action_detected:
@@ -82,7 +77,7 @@ class GmailHandler:
         return False
     
     def execute_reaction(self, reaction: models.Reaction, user_id: int, db: Session) -> bool:
-        if reaction.name != "send_email":
+        if reaction.name != "upload_file":
             return False
         
         auth = self.get_auth(user_id, db)
@@ -94,34 +89,35 @@ class GmailHandler:
             return False
         
         params = area.parameters or {}
-        to_email = params.get("to_email") 
-        subject = params.get("subject", "")
-        body = params.get("body", "")
+        file_path = params.get("file_path")
+        content = params.get("content", "")
         
-        if not to_email:
+        if not file_path:
             return False
         
-        return self.send_email(auth, to_email, subject, body)
-    
-    def send_email(self, auth: Dict, to_email: str, subject: str, body: str) -> bool:
         try:
-            message = MIMEText(body)
-            message["to"] = to_email
-            message["subject"] = subject
-            message["from"] = "me"
-            
-            raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-            
-            headers = {"Authorization": f"Bearer {auth['access_token']}"}
+            headers = {
+                "Authorization": f"Bearer {auth['access_token']}",
+                "Content-Type": "application/octet-stream",
+                "Dropbox-API-Arg": json.dumps({
+                    "path": file_path,
+                    "mode": "overwrite",
+                    "autorename": True,
+                    "mute": False
+                })
+            }
             
             response = httpx.post(
-                f"{self.api_base}/messages/send",
+                "https://content.dropboxapi.com/2/files/upload",
                 headers=headers,
-                json={"raw": raw_message},
+                content=content.encode('utf-8'),
                 timeout=10.0
             )
-            return response.status_code == 200
             
+            if response.status_code == 200:
+                print(f"Dropbox file uploaded")
+                return True
+                
         except Exception as e:
-            print(f"Gmail send error: {e}")
+            print(f"Dropbox error: {e}")
             return False
