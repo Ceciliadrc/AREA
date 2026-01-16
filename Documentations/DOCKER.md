@@ -38,6 +38,7 @@ networks:
 - Connected to `back-tier` network for backend communication
 - Credentials are set up in an environment file (see `.env.example`)
 
+<br>
 
 ### 2. Server Service (server)
 
@@ -55,6 +56,7 @@ networks:
 
 **Access :** http://localhost:8080/about.json
 
+<br>
 
 ### 3. Mobile Client Service (client_mobile)
 
@@ -74,7 +76,7 @@ networks:
 **Volume :** Shares `common` volume with `client_web` service
 
 **Access (Download) :** http://localhost:8081/client.apk
-
+<br>
 
 ### 4. Web Client Service (client_web)
 
@@ -134,3 +136,14 @@ docker-compose up -d
 # view all running services
 docker-compose ps
 ```
+
+<br>
+
+⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀
+⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠽⠞⠊⠀⠀  _<sub>By ✧˖°. Winx magic .°˖✧</sub>_

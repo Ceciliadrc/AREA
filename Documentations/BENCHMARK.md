@@ -1,5 +1,5 @@
 # Benchmark
-#### *We evaluated the most popular technologies for frontend, backend, and mobile development. Our criteria included, but weren’t limited to, learning curve, ecosystem size, performance, team familiarity, and suitability for our project features.*
+ *We evaluated the most popular technologies for frontend, backend, and mobile development. Our criteria included, but weren’t limited to, learning curve, ecosystem size, performance, team familiarity, and suitability for our project features.*
 
 ---
 
@@ -16,6 +16,7 @@
 | CONS          | DESCRIPTION                                  |
 |:--------------|:---------------------------------------------|
 | **Decisions** | Too many choices (state management, router…) |
+
 
 ## Vue.js
 
@@ -176,4 +177,17 @@
 | **Web Client**    | **React**  | Reusable components, huge ecosystem, excellent for dashboard-style apps               |
 | **Mobile Client** | **Kotlin** | Best Android performance, native look/feel, reliable for project scope                |
 
-#### *The combination of React-Python-Kotlin in our tech stack blends React's flexibility for the frontend, Python's robustness for the backend, and Kotlin's native performance for mobile. This layer specialization allows us to use the best technology for each component. Additionally, our expertise with these technologies would help accelerate development.*
+<br>
+
+*The combination of React-Python-Kotlin in our tech stack blends React's flexibility for the frontend, Python's robustness for the backend, and Kotlin's native performance for mobile. This layer specialization allows us to use the best technology for each component. Additionally, our expertise with these technologies would help accelerate development.*
+
+<br>
+
+⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀
+⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠽⠞⠊⠀⠀  _<sub>By ✧˖°. Winx magic .°˖✧</sub>_

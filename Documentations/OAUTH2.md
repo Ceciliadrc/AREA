@@ -4,12 +4,12 @@
 
 **For the services we choose :**
 
-- Dropbox
-- Github
-- Gmail
-- Notion
-- OpenAi
-- Twitch
+&emsp; **❀** Dropbox
+&emsp; **❀** Github
+&emsp; **❀** Gmail
+&emsp; **❀** Notion
+&emsp; **❀** OpenAi
+&emsp; **❀** Twitch
 
 ## Oauth2 implementation in our project ~
 
@@ -22,22 +22,37 @@
 5. The code is exchanged with an access token
 6. The access token is used to retreive the user’s profile on the service
 7. The tokens are stored in the database
+&emsp;
 
 **Endpoints :**
 
-***Login*** → redirect the user to the login page of the service
+&emsp; ***Login*** → redirect the user to the login page of the service
 
-***Callback*** → after the user authenticates himself on the service
+&emsp; ***Callback*** → after the user authenticates himself on the service
+<br>
 
 ### Service Configuration with the Database ~
 
-In our project, we can:
+**In our project, we can :**
 
-- Retrieve the OAuth configuration of a service by its name
-- Create or update OAuth tokens for a user and a specific service
-- Fetch OAuth token data for a user based on the service name
-- Initialize default OAuth-enabled services in the database
+**✴︎** Retrieve the OAuth configuration of a service by its name
+**✴︎** Create or update OAuth tokens for a user and a specific service
+**✴︎** Fetch OAuth token data for a user based on the service name
+**✴︎** Initialize default OAuth-enabled services in the database
+<br>
 
 **Requirements :**
 
 pip install fastapi uvicorn python-dotenv httpx
+
+
+<br>
+
+⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀
+⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠽⠞⠊⠀⠀  _<sub>By ✧˖°. Winx magic .°˖✧</sub>_

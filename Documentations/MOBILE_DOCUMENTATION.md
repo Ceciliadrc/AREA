@@ -1,6 +1,7 @@
 # Mobile documentation
 
 *Our AREA mobile client is an Android application made in Kotlin*
+<br>
 
 ### We built several pages for our mobile :
 
@@ -17,6 +18,7 @@ You can also choose to register in our app with Google
 On this page you can also see the list of connected services and the workflow statistic
 
 &emsp; **A workflow page ~** where the user can see and manage existing workflows
+<br>
 
 ### The main UI component for our mobile application :
 
@@ -27,6 +29,7 @@ On this page you can also see the list of connected services and the workflow st
 &emsp; **GradientButton ~** button with a gradient color to match our graphic charter
 
 &emsp; **OAuthButton ~** button to log in with a third party service
+<br>
 
 ### Features implemented :
 
@@ -47,6 +50,7 @@ On this page you can also see the list of connected services and the workflow st
 &emsp;&emsp; ★ Button to change the IP when logging in
 
 &emsp;&emsp; ★ Log out
+<br>
 
 ### Prerequisites :
 
@@ -57,3 +61,13 @@ On this page you can also see the list of connected services and the workflow st
 &emsp; ✿ Kotlin 1.9.0
 
 &emsp; ✿ Backend Server
+<br>
+
+⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀
+⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠽⠞⠊⠀⠀  _<sub>By ✧˖°. Winx magic .°˖✧</sub>_

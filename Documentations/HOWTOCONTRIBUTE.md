@@ -31,6 +31,7 @@ What was expected to happen and what actually happened
 # Environment
 Mobile or Web, Browser, Versions, etc.
 ```
+<br>
 
 ### Suggest features
 - Check the existing [issues](../../../issues) to see if the feature you want to included has been discussed.
@@ -42,6 +43,7 @@ Description :
 # Describe the feature
 A clear description of the feature you would like to see
 ```
+<br>
 
 ### Code contribution
 - Fork the repository
@@ -60,6 +62,8 @@ A clear description of the feature you would like to see
 - Bug fix: `fix_<bug-name>`
 - Documentation: `doc_<doc-name>`
 
+<br>
+
 ### Commit Message
 ```text
 <TYPE>: <description>
@@ -69,6 +73,8 @@ Types:
 - change an existing feature : `FIX`, `UPDATE`
 - delete something : `DEL`, `RM`
 - merge something in main branch : `MERGE`
+
+<br>
 
 ### Documentation
 - Update README.md or any other file in the Documentations directory
@@ -89,3 +95,14 @@ If you have questions, feel free to:
 ---
 
 Thank you for contributing !
+
+<br>
+
+⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀
+⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠽⠞⠊⠀⠀  _<sub>By ✧˖°. Winx magic .°˖✧</sub>_

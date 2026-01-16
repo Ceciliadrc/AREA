@@ -1,11 +1,12 @@
 # Technical Specification & API Documentation
 
-*This document outlines the technical specifications and API models for the Action-Reaction automation platform. The system allows users to create automated workflows by connecting triggers (Actions) from one service to resulting tasks (REActions) in another*
+&emsp;*This document outlines the technical specifications and API models for the Action-Reaction automation platform. The system allows users to create automated workflows by connecting triggers (Actions) from one service to resulting tasks (REActions) in another*
 
 - **System Architecture Summary :**
-    - **Application Server ~** Made in Python
-    - **Web Client ~** A React frontend served on port 8081.
-    - **Mobile Client ~** An Android app made in Kotlin
+    ✮ **Application Server ~** Made in Python
+    ✮ **Web Client ~** A React frontend served on port 8081.
+    ✮ **Mobile Client ~** An Android app made in Kotlin
+<br>
 
 ### **Data Models**
 
@@ -96,229 +97,229 @@ class AreaUpdate(BaseModel):
 		reaction_id: int
 		update_at: datetime
 ```
+<br>
 
 ### **API Endpoints**
 
-**AUTHENTIFICATION**:
+#### **AUTHENTIFICATION**:
 
-**POST /api/auth/register**
+&emsp;**POST /api/auth/register**
 
-**Description**: Create a new account
+&emsp;**Description**: Create a new account
 
-**Request body:**
-{
+&emsp;**Request body:**
 
-     ****"email ****":  ****"user@example.com ****"
-    "password": "password123",
-     "username": "username"
-}
-
-**Response Success:**
-{
-
-    ****"message": "Account created successfuly",
-    "user" {
-
-        "email": "“user@example.com",
-        "id": "1234",
+    {
+        ****"email ****":  ****"user@example.com ****"
+        "password": "password123",
         "username": "username"
     }
-}
 
-**Response Error:**
-{
+&emsp;**Response Success:**
 
-    "status": 400,
-
-    "error": {
-
-    "code": 1,
-
-    "message": [
-
-        "Email already used",
-
-        "Password not strong enough",
-
-        ]
-
-    }
-
-}
-
-**POST /api/auth/login**
-
-**Description**: Connect a user to his account
-
-**Request body:**
-{
-
-     ****"email ****":  ****"user@example.com"
-    "password": "password123",
-}
-
-**Response Success:**
-{
-
-    "message": "connexion successfull",
-    "user" {
-        "id": "1234",
-        "email ****":  ****"user@example.com ****"
-        "username": "username"
-    }
-}
-
-**Response Error:**
-{
-
-    "status": 401,
-
-    "error": {
-
-      "code": 2,
-
-      "message": [
-
-         "Invalid email or password"
-
-      ]
-
-   }
-
-}
-
-**SERVICE:**
-
-**GET /api/services**
-
-**Description:** List of available services
-
-**Response Success:**
-
-{
-
-    "services": [
-       {
-          "name": "meteo_france",
-          "displayName": "Météo France",
-          "actions": [
-            {
-               "name": "weather_alert",
-               "description": "Weather alert somewhere"
-            },
-           {
-               "name": "temperature_above",
-               "description": "Temperature above X degrees"
-           }
-       ],
-        "reactions": [
-            {
-                "name": "send_weather_alert",
-                "description": "Send a weather alert"
-            }
-        ]
+    {
+        ****"message": "Account created successfuly",
+        "user" {
+            "email": "“user@example.com",
+            "id": "1234",
+            "username": "username"
         }
-    ]
-}
+    }
 
-**Response Error:**
-{
+&emsp;**Response Error:**
 
-    "status": 401,
+    {
+        "status": 400,
         "error": {
-        "code": 3,
+        "code": 1,
         "message": [
-            "Authentication required"
-        ]
+            "Email already used",
+            "Password not strong enough",
+            ]
+        }
     }
-}
+<br>
 
-**AREA:**
+&emsp;**POST /api/auth/login**
 
-**POST /api/areas**
+&emsp;**Description**: Connect a user to his account
 
-**Description:** Create an AREA
+&emsp;**Request body:**
 
-**Request Body:**
-{
-
-    "name": "Heat wave alert",
-    "action": {
-       "service": "meteo_france",
-       "name": "temperature_above",
-       "config": {
-           "city": "Toulouse",
-           "temperature": 30
-       }
-    },
-    "reaction": {
-     "service": "gmail",
-     "name": "send_emailt",
-     "config": {
-          "to": "username@example.com",
-           "subject": "Heat wave alert in Toulouse",
-           "body": "The weather went above 30°C !"
-      }
+    {
+        ****"email ****":  ****"user@example.com"
+        "password": "password123",
     }
-}
 
-**Response Success:**
-{
+&emsp;**Response Success:**
 
-    "message": "AREA created with succes",
-    "area": {
-       "id": "area_meteo_1",
-       "name": "Heart wave alert",
-       "active": true
+    {
+        "message": "connexion successfull",
+        "user" {
+            "id": "1234",
+            "email ****":  ****"user@example.com ****"
+            "username": "username"
+        }
     }
-}
 
-**Response Error:**
-{
+&emsp;**Response Error:**
 
-    "status": 400,
-    "error": {
-     "code": 4,
-     "message": [
-       "Service not found",
-       "Invalid action configuration"
-      ]
+    {
+        "status": 401,
+            "error": {
+            "code": 2,
+            "message": [
+                "Invalid email or password"
+            ]
+        }
     }
-}
+<br>
 
-**SYSTEM:**
+#### **SERVICE:**
 
-**GET /about.json**
+&emsp;**GET /api/services**
 
-**Description:** Server informations
+&emsp;**Description:** List of available services
 
-**Response Success:**
-{
+&emsp;**Response Success:**
 
-    "client": {
-    "host": "127.0.0.1"
-    },
-    "server": {
-    "services": [
+    {
+        "services": [
         {
-        "name": "meteo_france",
-        "actions": [
-            {
+            "name": "meteo_france",
+            "displayName": "Météo France",
+            "actions": [
+                {
                 "name": "weather_alert",
-                "description": "Weather alert somewhere”
-            },
+                "description": "Weather alert somewhere"
+                },
             {
-                "name": "temperature_above ",
+                "name": "temperature_above",
                 "description": "Temperature above X degrees"
             }
         ],
-        "reactions": [
+            "reactions": [
+                {
+                    "name": "send_weather_alert",
+                    "description": "Send a weather alert"
+                }
+            ]
+            }
+        ]
+    }
+
+&emsp;**Response Error:**
+
+    {
+        "status": 401,
+            "error": {
+            "code": 3,
+            "message": [
+                "Authentication required"
+            ]
+        }
+    }
+<br>
+
+#### **AREA:**
+
+&emsp;**POST /api/areas**
+
+&emsp;**Description:** Create an AREA
+
+&emsp;**Request Body:**
+
+    {
+        "name": "Heat wave alert",
+        "action": {
+        "service": "meteo_france",
+        "name": "temperature_above",
+        "config": {
+            "city": "Toulouse",
+            "temperature": 30
+        }
+        },
+        "reaction": {
+        "service": "gmail",
+        "name": "send_emailt",
+        "config": {
+            "to": "username@example.com",
+            "subject": "Heat wave alert in Toulouse",
+            "body": "The weather went above 30°C !"
+        }
+        }
+    }
+
+&emsp;**Response Success:**
+
+    {
+        "message": "AREA created with succes",
+        "area": {
+        "id": "area_meteo_1",
+        "name": "Heart wave alert",
+        "active": true
+        }
+    }
+
+&emsp;**Response Error:**
+
+    {
+        "status": 400,
+            "error": {
+            "code": 4,
+            "message": [
+            "Service not found",
+            "Invalid action configuration"
+            ]
+        }
+    }
+<br>
+
+#### **SYSTEM:**
+
+&emsp;**GET /about.json**
+
+&emsp;**Description:** Server informations
+
+&emsp;**Response Success:**
+
+    {
+        "client": {
+        "host": "127.0.0.1"
+        },
+        "server": {
+        "services": [
             {
-                "name": "send_weather_alert",
-                "description": "Send a weather alert"
+            "name": "meteo_france",
+            "actions": [
+                {
+                    "name": "weather_alert",
+                    "description": "Weather alert somewhere”
+                },
+                {
+                    "name": "temperature_above ",
+                    "description": "Temperature above X degrees"
+                }
+            ],
+            "reactions": [
+                {
+                    "name": "send_weather_alert",
+                    "description": "Send a weather alert"
+                }
+                ]
             }
             ]
         }
-        ]
     }
-}
+
+
+<br>
+
+⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀
+⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠽⠞⠊⠀⠀  _<sub>By ✧˖°. Winx magic .°˖✧</sub>_
