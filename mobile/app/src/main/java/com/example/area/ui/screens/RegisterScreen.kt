@@ -40,10 +40,20 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+    var showServerDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val authRepository = remember { AuthRepository(context) }
+
+    ServerConfigDialog(
+        isVisible = showServerDialog,
+        onDismiss = { showServerDialog = false },
+        onSave = {
+            showServerDialog = false
+            Toast.makeText(context, "Server settings saved", Toast.LENGTH_SHORT).show()
+        }
+    )
 
     GradientBackground {
         AuthContainer(
@@ -115,6 +125,15 @@ fun RegisterScreen(
                 LoginLink(
                     onNavigateToLogin = onNavigateToLogin
                 )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    ServerConfigLink(
+                        onClick = { showServerDialog = true }
+                    )
+                }
             }
         }
     }

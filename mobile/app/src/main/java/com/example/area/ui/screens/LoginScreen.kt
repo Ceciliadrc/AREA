@@ -38,9 +38,19 @@ fun LoginScreen (
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
+    var showServerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val authRepository = remember { AuthRepository(context) }
+
+    ServerConfigDialog(
+        isVisible = showServerDialog,
+        onDismiss = { showServerDialog = false },
+        onSave = {
+            showServerDialog = false
+            Toast.makeText(context, "Server settings saved", Toast.LENGTH_SHORT).show()
+        }
+    )
 
     GradientBackground {
         AuthContainer(
@@ -70,7 +80,27 @@ fun LoginScreen (
                 GradientButton(
                     text = "Login",
                     onClick = {
-                        //TODO: scope.launch {}
+                        if (email.isNotEmpty() && password.isNotEmpty()) {
+                            isLoading = true
+                            scope.launch {
+                                val result = authRepository.login(email, password)
+                                isLoading = false
+
+                                if (result.isSuccess) {
+                                    val userResponse = result.getOrNull()
+                                    if (userResponse?.error != null) {
+                                        Toast.makeText(context, userResponse.error, Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        val message = userResponse?.message ?: "Login successful!"
+                                    }
+                                } else {
+                                    val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+                                    Toast.makeText(context, "Login failed: $errorMessage", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     isLoading = isLoading
@@ -79,11 +109,20 @@ fun LoginScreen (
                 OrDivider()
                 Text("Login with", fontSize = 18.sp, color = Mauve, modifier = Modifier.align(Alignment.CenterHorizontally))
                 OAuthButtonsRow()
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(18.dp))
                 OrDivider()
                 RegisterLink(
                     onNavigateToRegister = onNavigateToRegister
                 )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    ServerConfigLink(
+                        onClick = { showServerDialog = true }
+                    )
+                }
             }
         }
     }

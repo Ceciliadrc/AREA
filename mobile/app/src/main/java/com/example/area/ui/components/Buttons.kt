@@ -61,7 +61,7 @@ fun OAuthButton(
         onClick = onClick,
         modifier = modifier
             .width(100.dp)
-            .height(48.dp),
+            .height(64.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
             contentColor = Color.White
