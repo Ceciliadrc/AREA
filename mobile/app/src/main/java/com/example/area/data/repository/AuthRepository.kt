@@ -3,7 +3,7 @@ package com.example.area.data.repository
 import android.content.Context
 import android.util.Log
 import com.example.area.data.api.ApiClient
-import com.example.area.data.models.UserResponse
+import com.example.area.data.models.*
 import com.example.area.utils.SharedPreferencesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,7 +33,7 @@ class AuthRepository(private val context: Context) {
                 Log.d(TAG, "Calling API: /auth/register")
                 Log.d(TAG, "Data: username=$username, email=$email")
 
-                val response = apiService.register(username, email, password)
+                val response = apiService.register(RegisterBody(username, email, password))
 
                 if (response.isSuccessful) {
                     val userResponse = response.body()!!
@@ -77,7 +77,7 @@ class AuthRepository(private val context: Context) {
                 Log.d(TAG, "Calling API: /auth/login")
                 Log.d(TAG, "Data: email=$email")
 
-                val response = apiService.login(email, password)
+                val response = apiService.login(LoginBody(email, password))
 
                 if (response.isSuccessful) {
                     val userResponse = response.body()!!

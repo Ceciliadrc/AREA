@@ -7,20 +7,11 @@ import retrofit2.http.*
 interface ApiService {
 
     // AUTH ENDPOINTS
-    @FormUrlEncoded
     @POST("auth/register")
-    suspend fun register(
-        @Field("username") username: String,
-        @Field("email") email: String,
-        @Field("password") password: String
-    ): Response<UserResponse>
+    suspend fun register(@Body body: RegisterBody): Response<UserResponse>
 
-    @FormUrlEncoded
     @POST("auth/login")
-    suspend fun login(
-        @Field("email") email: String,
-        @Field("password") password: String
-    ): Response<UserResponse>
+    suspend fun login(@Body body: LoginBody): Response<UserResponse>
 
     @GET("auth/google/login")
     suspend fun googleLogin(): Response<Unit>
