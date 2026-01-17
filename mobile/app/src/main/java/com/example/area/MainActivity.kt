@@ -75,7 +75,7 @@ fun AppContent() {
 
         composable("main") {
             val context = androidx.compose.ui.platform.LocalContext.current
-            
+
             MainAppScreen(
                 context = context,
                 onLogout = {

@@ -9,7 +9,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.area.ui.theme.*
+import com.example.area.utils.SharedPreferencesManager
+import com.example.area.data.api.ApiClient
 import com.example.area.ui.components.LogoutButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,6 +32,36 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     onLogout: () -> Unit
 ) {
+    val context = LocalContext.current
+    val prefs = remember { SharedPreferencesManager(context) }
+    val api = remember { ApiClient.getApiService(context) }
+
+    val username = prefs.getUsername().ifBlank { "Unknown" }
+    val email = prefs.getUserEmail().ifBlank { "Unknown" }
+    val userId = prefs.getUserId()
+
+    var servicesCount by  remember {mutableStateOf<Int?>(null)}
+    var workflowsCount by  remember {mutableStateOf<Int?>(null)}
+    var loadError by  remember {mutableStateOf<String?>(null)}
+
+    LaunchedEffect(userId) {
+        if (userId == -1) return@LaunchedEffect
+
+        try {
+            val servicesRes = api.getAllServices()
+            if (servicesRes.isSuccessful) {
+                servicesCount = servicesRes.body()?.services?.size
+            }
+
+            val areasRes = api.getUserAreas(userId)
+            if (areasRes.isSuccessful) {
+                workflowsCount = areasRes.body()?.areas?.size
+            }
+        } catch (e: Exception) {
+            loadError = e.message
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -95,8 +128,15 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 ProfileInfoCard(
+                    title = "Email",
+                    value = email
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ProfileInfoCard(
                     title = "Username",
-                    value = "your.email@area.com"
+                    value = username
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -107,16 +147,16 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     StatsCard(
-                        title = "Active workflows",
-                        value = "X",
+                        title = "Connected services",
+                        value = servicesCount?.toString() ?: "...",
                         color1 = Blossom,
                         color2 = Peony,
                         modifier = Modifier.weight(1f)
                     )
 
                     StatsCard(
-                        title = "Workflows executed",
-                        value = "X",
+                        title = "Active workflows",
+                        value = workflowsCount?.toString() ?: "...",
                         color1 = Mauve,
                         color2 = Graphite,
                         modifier = Modifier.weight(1f)
