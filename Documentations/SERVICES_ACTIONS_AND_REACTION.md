@@ -8,11 +8,11 @@
 
 #### Actions :
 
-&emsp; ● **Add a file ~** happens when a file is added to a Dropbox folder
+&emsp; ●  **Add a file** **~**  happens when a file is added to a Dropbox folder
 
 #### Reactions :
 
-&emsp; ● **Upload a file ~** upload a file from the platform to a Dropbox folder
+&emsp; ● **Upload a file** **~** upload a file from the platform to a Dropbox folder
 <br>
 ## Github
 &ensp; *A platform that allows developers to create, store, manage, and share their code*
@@ -39,6 +39,25 @@
 
 &emsp; ● **Send an email** **~** sends an email with the connected Gmail account
 <br>
+
+## Microsoft
+
+&ensp; *An American computer and microinformatics multinational*
+
+#### Actions :
+
+&emsp; ● **New mail received** **~** happens when a new email arrives in the OUtlook box
+
+&emsp; ● **New file in OneDrive** **~** happens when a new file is added to a OneDrive folder
+
+#### Reactions :
+
+&emsp; ● **Send mail** **~** sends a new email with Outlook
+
+&emsp; ● **Upload file to OneDrive** **~** Uploads a file in a OneDrive folder
+
+<br>
+
 ## Notion
 
 &ensp; *An all-in-one productivity app* for writing, planning, and organizing notes, projects, tasks, and more
@@ -52,22 +71,6 @@
 #### Reactions :
 
 &emsp; ● **Create a page** **~** creates a new page in the user’s workspace
-<br>
-## Trello
-
-&ensp; *An American artificial intelligence research organization*
-
-#### Actions :
-
-&emsp; ● **New card created ~** happens when a new card is created
-
-&emsp; ● **Card archived** **~** happens when a card is moved in the archive
-
-#### Reactions :
-
-&emsp; ● **Create a card** **~** Generates a new card in the specified Trello board
-
-&emsp; ● **Add label to card** **~** Add a desired label to a Trello card
 
 <br>
 
@@ -86,11 +89,11 @@
 
 <br>
 
-⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀
-⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀
+⣧⢮⢭⠛⢲⣦⣀⠀⠀⠀⠀⡀⠀⠀⠀\
+⠈⠻⣶⡛⠲⣄⠀⠙⠢⣀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\
+⠀⠀⢻⣿⣥⡬⠽⠶⠤⣌⣣⣼⡔⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\
+⠀⠀⢠⣿⣧⣤⡴⢤⡴⣶⣿⣟⢯⡙⠒⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\
+⠀⠀⠘⣗⣞⣢⡟⢋⢜⣿⠛⡿⡄⢻⡮⣄⠈⠳⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\
+⠀⠀⠀⠈⠻⠮⠴⠵⢋⣇⡇⣷⢳⡀⢱⡈⢋⠛⣄⣹⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀\
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣱⡇⣦⢾⣾⠿⠟⠿⠷⠷⣻⠧⠀⠀⠀⠀⠀⠀⠀⠀\
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠽⠞⠊⠀⠀  _<sub>By ✧˖°. Winx magic .°˖✧</sub>_
