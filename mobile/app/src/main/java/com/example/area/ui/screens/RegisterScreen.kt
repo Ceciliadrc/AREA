@@ -1,5 +1,6 @@
 package com.example.area.ui.screens
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.area.ui.theme.*
 import com.example.area.ui.components.*
+import com.example.area.R
 import androidx.compose.runtime.rememberCoroutineScope
 import com.example.area.data.repository.AuthRepository
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.focus.focusModifier
+import com.example.area.auth.googleAuthFlow
 import com.example.area.data.repository.RepositoryManager
 import kotlinx.coroutines.launch
 
@@ -44,6 +47,7 @@ fun RegisterScreen(
     var showServerDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    val activity = context as? Activity
     val scope = rememberCoroutineScope()
     val authRepository = remember { RepositoryManager.getAuthRepository(context) }
 
@@ -122,7 +126,20 @@ fun RegisterScreen(
 
                 OrDivider()
                 Text("Sign up with", fontSize = 16.sp, color = Mauve, fontWeight = FontWeight.Medium, modifier = Modifier.align(Alignment.CenterHorizontally))
-                OAuthButtonsRow()
+                OAuthButtonsRow(
+                    onGoogleClick = {
+                        scope.launch {
+                            googleAuthFlow(
+                                context = context,
+                                activity = activity,
+                                webClientId = context.getString(R.string.google_web_client_id),
+                                authRepository = authRepository,
+                                successToast = "Account created w Google!",
+                                onSuccess = onRegisterSuccess
+                            )
+                        }
+                    }
+                )
                 LoginLink(
                     onNavigateToLogin = onNavigateToLogin
                 )

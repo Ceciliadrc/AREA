@@ -1,5 +1,6 @@
 package com.example.area.ui.screens
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,8 +19,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.area.auth.googleAuthFlow
 import com.example.area.ui.theme.*
 import com.example.area.ui.components.*
+import com.example.area.R
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,8 +43,10 @@ fun LoginScreen (
     var rememberMe by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var showServerDialog by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val activity = context as? Activity
     val authRepository = remember { RepositoryManager.getAuthRepository(context) }
 
     ServerConfigDialog(
@@ -109,7 +114,20 @@ fun LoginScreen (
 
                 OrDivider()
                 Text("Login with", fontSize = 18.sp, color = Mauve, modifier = Modifier.align(Alignment.CenterHorizontally))
-                OAuthButtonsRow()
+                OAuthButtonsRow(
+                    onGoogleClick = {
+                        scope.launch {
+                            googleAuthFlow(
+                                context = context,
+                                activity = activity,
+                                webClientId = context.getString(R.string.google_web_client_id),
+                                authRepository = authRepository,
+                                successToast = "Logged in w Google!",
+                                onSuccess = onLoginSuccess
+                            )
+                        }
+                    }
+                )
                 Spacer(modifier = Modifier.height(18.dp))
                 OrDivider()
                 RegisterLink(
@@ -162,14 +180,16 @@ fun RememberMeAndForgotPasswordRow(
 }
 
 @Composable
-fun OAuthButtonsRow() {
+fun OAuthButtonsRow(
+    onGoogleClick: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         OAuthButton(
             text = "Google",
-            onClick = { /* TODO: Google OAuth */ },
+            onClick = onGoogleClick,
             color = Mauve
         )
 

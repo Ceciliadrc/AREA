@@ -20,6 +20,10 @@ data class GoogleAuthResponse(
     val tokens: Map<String, Any>? = null
 )
 
+data class GoogleIdTokenRequest(
+    val id_token: String
+)
+
 data class ApiError(
     val error: String? = null,
     val message: String? = null

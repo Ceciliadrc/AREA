@@ -19,6 +19,10 @@ interface ApiService {
     @GET("auth/google/callback")
     suspend fun googleCallback(@Query("code") code: String): Response<GoogleAuthResponse>
 
+    @POST("auth/google/token")
+    suspend fun googleTokenLogin(@Body body: GoogleIdTokenRequest): Response<UserResponse>
+
+
     // SERVICES ENDPOINTS
     @GET("services/")
     suspend fun getAllServices(): Response<ServicesResponse>
