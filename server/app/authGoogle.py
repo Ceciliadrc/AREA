@@ -9,14 +9,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from urllib.parse import urlencode
-from datetime import timedelta
 import httpx
 import os
-import uuid
 from app import database, models, security
-
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -89,80 +84,4 @@ async def google_callback(state: str, code: str, db: Session = Depends(database.
     return {
         "message": "Google login success!",
         "tokens": tokens
-    }
-
-class GoogleTokenBody(dict):
-    pass
-
-@router.post("google/token")
-def google_token_login(payload: dict, db: Session = Depends(database.get_db)):
-    if not GOOGLE_CLIENT_ID:
-        raise HTTPException(500, "GOOGLE_CLIENT_ID missing in env")
-    
-    raw_id_token = payload.get("id_token")
-    if not raw_id_token:
-        raise HTTPException(400, "Missing id_token")
-    
-    try:
-        claims = id_token.verify_oauth2_token(
-            raw_id_token,
-            google_requests.Request(),
-            GOOGLE_CLIENT_ID
-        )
-    except Exception:
-        raise HTTPException(401, "Invalid Google ID token")
-    
-    email = claims.get("email")
-    google_sub = claims.get("sub")
-    if not email or not google_sub:
-        raise HTTPException(400, "Google token missing email/sub")
-    
-    user = db.query(models.User).filter(models.User.email == email).first()
-    if not user:
-        base = (claims.get("name") or email.split("@")[0]).replace(" ", "").lower()
-        username = base
-
-        i = 1
-        while db.query(models.User).filter(models.User.username == username).first():
-            i += 1
-            username = f"{base}{i}"
-
-        random_pw = str(uuid.uuid4())
-        user = models.User(
-            username=username,
-            email=email,
-            password=security.hash_password(random_pw)
-        )
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-
-    service = db.query(models.Service).filter(models.Service.name == "google").first()
-    if service:
-        existing_link = db.query(models.UserOauth).filter(
-            models.UserOauth.user_id == user.id,
-            models.UserOauth.service_id == service.id
-        ).first()
-
-        if existing_link:
-            existing_link.provider_user_id = google_sub
-        else:
-            db.add(models.UserOauth(
-                user_id=user.id,
-                service_id=service.id,
-                provide_user_id=google_sub
-            ))
-        db.commit()
-
-    token_expire = timedelta(minutes=60 * 24)
-    access_token = security.create_access(
-        data={"sub": user.email},
-        expires_delta=token_expire
-    )
-
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user_id": user.id,
-        "username": user.username
     }
