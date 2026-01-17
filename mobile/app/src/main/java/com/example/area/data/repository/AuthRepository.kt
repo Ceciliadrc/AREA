@@ -117,6 +117,33 @@ class AuthRepository(private val context: Context) {
         }
     }
 
+    suspend fun loginWithGoogle(idToken: String, email: String): Result<UserResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.googleTokenLogin(GoogleIdTokenRequest(id_token = idToken))
+
+                if (response.isSuccessful) {
+                    val userResponse = response.body()!!
+
+                    if (userResponse.error != null) {
+                        Result.failure(Exception(userResponse.error))
+                    } else {
+                        userResponse.userId?.let { userId ->
+                            sharedPrefs.saveUserId(userId)
+                            sharedPrefs.saveUserEmail(email)
+                            userResponse.username?.let { sharedPrefs.saveUsername(it) }
+                        }
+                        Result.success(userResponse)
+                    }
+                } else {
+                    Result.failure(Exception("Google login failed: ${response.code()}"))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
+
     fun logout() {
         Log.d(TAG, "Logging out user")
         sharedPrefs.clearUserData()
