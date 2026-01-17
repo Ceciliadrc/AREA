@@ -62,7 +62,7 @@ networks:
 
 **Dockerfile Location :** `./mobile/Dockerfile`
 
-**Base Image :** `gradle:8.5-jdk17`
+**Base Image :** `gradle:8.14.3-jdk21`
 
 **Purpose :** Builds Android APK file for mobile distribution.
 
@@ -76,6 +76,7 @@ networks:
 **Volume :** Shares `common` volume with `client_web` service
 
 **Access (Download) :** http://localhost:8081/client.apk
+
 <br>
 
 ### 4. Web Client Service (client_web)
@@ -122,16 +123,10 @@ networks:
 ## Docker Compose Commands
 ```bash
 # stop all services
-docker-compose down
+docker-compose down -v
 
-# rebuild all images and ignore cache
-docker-compose build --no-cache
-
-# start database
-docker-compose up -d db
-
-# start all services
-docker-compose up -d
+# rebuild all images and start all services
+docker-compose up --build
 
 # view all running services
 docker-compose ps
