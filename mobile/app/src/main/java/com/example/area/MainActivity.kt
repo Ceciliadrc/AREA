@@ -30,6 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.area.data.repository.AuthRepository
 import com.example.area.ui.screens.*
 import com.example.area.ui.theme.*
 import com.example.area.ui.components.*
@@ -73,7 +74,10 @@ fun AppContent() {
         }
 
         composable("main") {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            
             MainAppScreen(
+                context = context,
                 onLogout = {
                     isLoggedIn = false
                     navController.navigate("login") {
@@ -103,10 +107,14 @@ fun AppContent() {
 }
 
 @Composable
-fun MainAppScreen(onLogout: () -> Unit) {
+fun MainAppScreen(
+    context: android.content.Context,
+    onLogout: () -> Unit
+) {
     val innerNavController = rememberNavController()
     val navBackStackEntry by innerNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: "profile"
+    val authRepository = remember { AuthRepository(context) }
 
     val showBottomNav = when (currentRoute) {
         "profile", "workflows", "actions" -> true
@@ -121,22 +129,19 @@ fun MainAppScreen(onLogout: () -> Unit) {
         ) {
             composable("profile") {
                 ProfileScreen(
-                    onEditProfile = { innerNavController.navigate("editProfile") }
+                    onLogout = {
+                        authRepository.logout()
+                        onLogout()
+                    }
                 )
             }
 
             composable("workflows") {
-                WorkflowsScreen(
-                )
+                WorkflowsScreen()
             }
 
             composable("actions") {
-                ActionScreen(
-                )
-            }
-
-            composable("editProfile") {
-                Text("Edit Profile Screen - TODO")
+                ActionScreen()
             }
         }
 
@@ -150,7 +155,6 @@ fun MainAppScreen(onLogout: () -> Unit) {
                     currentRoute = currentRoute,
                     onWorkflowsClick = {
                         innerNavController.navigate("workflows") {
-                            // Single top - prevents multiple copies
                             launchSingleTop = true
                         }
                     },
@@ -167,14 +171,6 @@ fun MainAppScreen(onLogout: () -> Unit) {
                 )
             }
         }
-    }
-}
-
-// Add logout..at some point...somewhere
-@Composable
-fun handleLogout(navController: NavHostController) {
-    navController.navigate("login") {
-        popUpTo(0) { inclusive = true }
     }
 }
 

@@ -2,6 +2,8 @@ package com.example.area.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.background
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -72,6 +74,19 @@ fun OAuthButton(
             text = text,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun LogoutButton(
+    onLogout: () -> Unit,
+) {
+    IconButton(onClick = onLogout) {
+        Icon(
+            imageVector = Icons.Default.Logout,
+            contentDescription = "Logout",
+            tint = Color.White
         )
     }
 }

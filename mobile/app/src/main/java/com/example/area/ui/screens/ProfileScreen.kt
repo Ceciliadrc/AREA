@@ -21,13 +21,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.area.ui.theme.*
+import com.example.area.ui.components.LogoutButton
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    onEditProfile: () -> Unit = {},
+    onLogout: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -40,9 +40,9 @@ fun ProfileScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = onEditProfile) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit Profile")
-                    }
+                   LogoutButton(
+                       onLogout = onLogout
+                   )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
