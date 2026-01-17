@@ -8,7 +8,7 @@
         <domain includeSubdomains="true">localhost</domain>
 
         <!-- For physical device testing (replace with computer's IP) -->
-        <!-- <domain includeSubdomains="true">192.168.1.100</domain> -->
+        <domain includeSubdomains="true">192.168.1.100</domain>
         <domain includeSubdomains="true">10.15.0.0</domain>
         <domain includeSubdomains="true">10.0.0.0</domain>
         <domain includeSubdomains="true">172.24.139.34</domain>
