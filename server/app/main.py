@@ -8,6 +8,7 @@ from .areas import router as areas_router
 from .services import router as services_router
 from sqlalchemy import exc
 from app.hook import hook
+
 from .authMicrosoft import router as mircosoft_auth_router
 from .authTwitch import router as twitch_auth_router
 from .authNotion import router as notion_auth_router

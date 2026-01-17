@@ -174,29 +174,3 @@ def update_user_role(user_id: int, new_role: str, db: Session = Depends(database
     user.role = new_role
     db.commit()
     return {"message": f"User {user_id} role updated to {new_role}"}
-
-@router.get("/users/{user_id}/credentials")
-def get_user_credentials(user_id: int,db: Session = Depends(database.get_db), current_user: models.User = Depends(security.active_user)):
-    user_tokens = db.query(models.UserOauth).filter(models.UserOauth.user_id == user_id).all()
-    
-    if current_user.id != user_id and current_user.role != "admin":
-        raise HTTPException(
-            status_code=403,
-            detail="Not authorized to update this user"
-        )
-    credentials = []
-    for token in user_tokens:
-        service = db.query(models.Service).filter(models.Service.id == token.service_id).first()
-        
-        if service:
-            credentials.append({
-                "service_name": service.name,
-                "display_name": service.display_name,
-                "connected": True,
-                "has_token": bool(token.access_token)
-            })
-    return {
-        "user_id": user_id,
-        "connected_services": credentials,
-        "total_connected": len(credentials)
-    }

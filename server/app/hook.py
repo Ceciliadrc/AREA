@@ -9,7 +9,7 @@ from .handlers.notionHandler import NotionHandler
 from .handlers.twitchHandler import TwitchHandler
 from .handlers.githubHandler import GithubHandler
 from .handlers.dropBoxHandler import DropboxHandler
-# from .handlers.trelloHandler import TrelloHandler
+# from .handlers.microsoftHandler import MicrosoftHandler
 
 class Hook:
     def __init__(self):
@@ -22,7 +22,7 @@ class Hook:
             "twitch": TwitchHandler(),
             "github": GithubHandler(),
             "dropbox": DropboxHandler(),
-            # "trello": TrelloHandler()
+            # "microsoft": MicrosoftHandler(),
         }
     def get_handler(self, service_name: str):
         return self.handlers.get(service_name)

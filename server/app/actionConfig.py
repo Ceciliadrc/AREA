@@ -35,25 +35,23 @@ ACTION_CONFIGS = {
             ]
         }
     },
-    "trello": {
-        "new_card": {
+    "microsoft": {
+        "new_email": {
             "fields": [
                 {
-                    "name": "board_name",
-                    "type": "text",
-                    "label": "Trello Board Name",
-                    "required": True
+                    "name": "sender",
+                    "type": "email",
+                    "required": False
                 }
             ]
         },
-        "card_archived": {
+        "new_file": {
             "fields": [
                 {
-                    "name": "board_name",
-                    "type": "text",
-                    "label": "Board Name",
+                    "name": "folder",
+                    "type": "text", 
+                    "label": "Folder path",
                     "required": True,
-                    "description": "Watch for archived cards in this board"
                 }
             ]
         }
@@ -161,51 +159,42 @@ REACTION_CONFIGS = {
             ]
         }
     },
-    "trello": {
-        "create_card": {
+    "microsoft": {
+        "send_email": {
             "fields": [
                 {
-                    "name": "board_name",
-                    "type": "text",
-                    "label": "Board to create card in",
+                    "name": "to",
+                    "type": "email",
+                    "label": "To",
                     "required": True
                 },
                 {
-                    "name": "card_title", 
+                    "name": "subject", 
                     "type": "text",
-                    "label": "Card title",
+                    "label": "Subject",
+                    "required": True
+                },
+                {
+                    "name": "message",
+                    "type": "textarea",
+                    "label": "Message",
                     "required": True
                 }
             ]
         },
-        "add_label": {
+        "upload_file": {
             "fields": [
                 {
-                    "name": "board_name",
+                    "name": "path",
                     "type": "text",
-                    "label": "Trello Board",
-                    "required": True
-                },
-                {
-                    "name": "card_name",
-                    "type": "text",
-                    "label": "Card Name",
+                    "label": "File path",
                     "required": True,
-                    "description": "Exact name of the card to label"
                 },
                 {
-                    "name": "label_name",
-                    "type": "text",
-                    "label": "Label name",
+                    "name": "content",
+                    "type": "textarea", 
+                    "label": "Content",
                     "required": True
-                },
-                {
-                    "name": "label_color",
-                    "type": "select",
-                    "label": "Color",
-                    "options": ["red", "green", "blue", "yellow", "purple", "orange"],
-                    "required": True,
-                    "default": "green"
                 }
             ]
         }

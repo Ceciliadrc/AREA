@@ -33,7 +33,7 @@ def logWithGoogle(user_id: int):
         "client_id": GoogleOAuthConfig.client_id,
         "redirect_uri": GoogleOAuthConfig.redirect_uri,
         "response_type": "code",
-        "scope": "openid email profile",
+        "scope": "openid email profile https://www.googleapis.com/auth/gmail.readonly",
         "access_type": "offline",
         "prompt": "consent",
         "state": str(user_id)

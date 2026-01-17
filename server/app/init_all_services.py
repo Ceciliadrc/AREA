@@ -54,26 +54,26 @@ def init_services():
         ]
     },
     {
-    "name": "trello",
-        "display_name": "Trello",
+    "name": "microsoft",
+        "display_name": "Microsoft",
         "actions": [
             {
-                "name": "new_card",
-                "description": "A new card is created on a board"
+                "name": "new_email",
+                "description": "New email in Outlook"
             },
             {
-                "name": "card_archived",
-                "description": "A card is archived"
+                "name": "new_file", 
+                "description": "New file in OneDrive"
             }
         ],
         "reactions": [
             {
-                "name": "create_card",
-                "description": "Create a new card"
+                "name": "send_email",
+                "description": "Send email via Outlook"
             },
             {
-                "name": "add_label",
-                "description": "Add a label to a card"
+                "name": "upload_file",
+                "description": "Upload file to OneDrive"
             }
         ]
     },
