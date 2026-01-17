@@ -68,8 +68,6 @@ export default function Register({ goTo }) {
       <p style={{ textAlign: "center", fontSize: 12, marginBottom: 16, color: colors.textMuted }}>Register with</p>
       <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
         <SocialButton iconSrc={GoogleLogo} alt="Google" onClick={() => handleSocialRegister("google")} />
-        <SocialButton iconSrc={GithubLogo} alt="Github" onClick={() => handleSocialRegister("github")} />
-        <SocialButton iconSrc={FacebookLogo} alt="Facebook" onClick={() => handleSocialRegister("facebook")} />
       </div>
 
       <DividerWithText>or</DividerWithText>

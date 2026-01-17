@@ -113,20 +113,6 @@ export default function Login({ goTo }) {
               console.log("Social login not implemented yet");
             }}
           />
-          <SocialButton
-            iconSrc={GithubLogo}
-            alt="Login with Github"
-            onClick={() => {
-              console.log("Social login not implemented yet");
-            }}
-          />
-          <SocialButton
-            iconSrc={FacebookLogo}
-            alt="Login with Facebook"
-            onClick={() => {
-              console.log("Social login not implemented yet");
-            }}
-          />
         </div>
 
         <DividerWithText>or</DividerWithText>

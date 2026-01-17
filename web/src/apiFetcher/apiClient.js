@@ -109,6 +109,14 @@ class ApiClient {
         return data;
     }
 
+    async logout() {
+        this.clearToken();
+        localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('token');
+        sessionStorage.clear();
+    }
+
     async verifyToken(token = this.token) {
         if (!token)
             throw new Error("No token to verify");

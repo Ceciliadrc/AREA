@@ -12,12 +12,11 @@ import { PageTitle } from "../components/ui/PageTitle";
 import ProfilePicture from "../components/profile/ProfilePicture";
 import CredentialCard from "../components/profile/CredentialCard";
 import Overlay from "../components/ui/Overlay";
-import PrimaryButton from "../components/ui/PrimaryButton";
-import { colors } from "../components/theme";
+import {colors, radius} from "../components/theme";
 
 import api from "../apiFetcher/api.js";
 
-export default function Profile({ goTo }) {
+export default function Profile({ goTo, onClick, style = {}}) {
   const [credentials, setCredentials] = useState([]);
 
   const availableCredentials = [
@@ -30,6 +29,8 @@ export default function Profile({ goTo }) {
   const [activeWorkflows, setActiveWorkflows] = useState(0);
   const [executedWorkflows, setExecutedWorkflows] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
 
   // workflows stats
   useEffect(() => {
@@ -85,6 +86,18 @@ export default function Profile({ goTo }) {
     })();
   }, []);
 
+    /*useEffect(() => {
+        const userData = api.getUsers()
+        const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+
+        if (userData && token) {
+            setUser(userData);
+            api.setToken(token);
+        } else {
+            goTo('/login');
+        }
+    }, []);*/
+
   // Overlay
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [overlayMode, setOverlayMode] = useState(null);
@@ -132,6 +145,12 @@ export default function Profile({ goTo }) {
     }
   };
 
+    const handleLogout = async () => {
+        setLoading(true);
+        await api.logout();
+        goTo("login");
+    };
+
   return (
     <AppLayout>
       <div
@@ -145,6 +164,24 @@ export default function Profile({ goTo }) {
         }}
       >
         <PageTitle>My profile</PageTitle>
+
+        <button
+            onClick={handleLogout}
+            style={{
+                width: "25%",
+                padding: "12px 24px",
+                borderRadius: radius.pill,
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+                color: "#fff",
+                background: colors.primaryGradient,
+                fontSize: 15,
+                ...style,
+            }}
+        >
+           Logout
+        </button>
 
         {/* Profile */}
         <div
