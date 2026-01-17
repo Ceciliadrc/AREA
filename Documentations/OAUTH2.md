@@ -7,8 +7,8 @@
 &emsp; **❀** Dropbox
 &emsp; **❀** Github
 &emsp; **❀** Gmail
+&emsp; **❀** Microsoft
 &emsp; **❀** Notion
-&emsp; **❀** Trello
 &emsp; **❀** Twitch
 
 ## Oauth2 implementation in our project ~

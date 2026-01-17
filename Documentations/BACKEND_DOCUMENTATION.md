@@ -42,9 +42,9 @@
 
 &emsp; ʚɞ Google (Gmail)
 
-&emsp; ʚɞ Notion
+&emsp; ʚɞ Microsoft
 
-&emsp; ʚɞ Trello
+&emsp; ʚɞ Notion
 
 &emsp; ʚɞ Twitch
 
