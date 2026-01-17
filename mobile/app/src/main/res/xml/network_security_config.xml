@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <!-- For Android Emulator -->
-        <!--<domain includeSubdomains="true">10.0.2.2</domain>-->
-
-        <!-- For localhost testing -->
-        <domain includeSubdomains="true">localhost</domain>
-
-        <!-- For physical device testing (replace with computer's IP) -->
-        <domain includeSubdomains="true">192.168.0.0</domain>
-        <domain includeSubdomains="true">10.15.0.0</domain>
-        <domain includeSubdomains="true">10.0.0.0</domain>
-        <domain includeSubdomains="true">172.24.0.0</domain>
-    </domain-config>
+    <base-config cleartextTrafficPermitted="true" />
 </network-security-config>
