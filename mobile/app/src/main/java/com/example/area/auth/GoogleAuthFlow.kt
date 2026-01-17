@@ -2,6 +2,7 @@ package com.example.area.auth
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.example.area.data.repository.AuthRepository
 
@@ -32,6 +33,7 @@ suspend fun googleAuthFlow(
             Toast.makeText(context, "Google sign-in failed: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
         }
     } catch (e: Exception) {
-        Toast.makeText(context, "Google sign-in error: ${e.message}", Toast.LENGTH_SHORT)
+        Toast.makeText(context, "Google sign-in error: ${e.message}", Toast.LENGTH_SHORT).show()
+        Log.e("GoogleAuthFlow", "error", e)
     }
 }

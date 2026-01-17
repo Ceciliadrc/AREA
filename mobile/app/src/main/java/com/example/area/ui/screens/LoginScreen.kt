@@ -98,6 +98,8 @@ fun LoginScreen (
                                         Toast.makeText(context, userResponse.error, Toast.LENGTH_SHORT).show()
                                     } else {
                                         val message = userResponse?.message ?: "Login successful!"
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                        onLoginSuccess()
                                     }
                                 } else {
                                     val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
@@ -193,7 +195,7 @@ fun OAuthButtonsRow(
             color = Mauve
         )
 
-        // like...add others if we got any ideas
+        // like...add others if we got any time
     }
 }
 
