@@ -20,6 +20,7 @@ import GithubLogo from "../assets/github.png";
 import FacebookLogo from "../assets/facebook.png";
 
 import api from "../apiFetcher/api.js";
+import GradientButton from "../components/ui/GradientButton.jsx";
 
 export default function Login({ goTo }) {
   return (
@@ -137,6 +138,13 @@ export default function Login({ goTo }) {
           </TextButton>
         </p>
       </div>
+
+      <a href="/client.apk" download="client.apk">
+          <GradientButton width={"100%"}>
+              Download APK
+          </GradientButton>
+      </a>
+
     </CenteredCardLayout>
   );
 }

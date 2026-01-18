@@ -12,7 +12,8 @@ import { PageTitle } from "../components/ui/PageTitle";
 import ProfilePicture from "../components/profile/ProfilePicture";
 import CredentialCard from "../components/profile/CredentialCard";
 import Overlay from "../components/ui/Overlay";
-import {colors, radius} from "../components/theme";
+import GradientButton from "../components/ui/GradientButton.jsx";
+import {colors} from "../components/theme";
 
 import api from "../apiFetcher/api.js";
 
@@ -165,23 +166,9 @@ export default function Profile({ goTo, onClick, style = {}}) {
       >
         <PageTitle>My profile</PageTitle>
 
-        <button
-            onClick={handleLogout}
-            style={{
-                width: "25%",
-                padding: "12px 24px",
-                borderRadius: radius.pill,
-                border: "none",
-                cursor: "pointer",
-                fontWeight: "bold",
-                color: "#fff",
-                background: colors.primaryGradient,
-                fontSize: 15,
-                ...style,
-            }}
-        >
-           Logout
-        </button>
+          <GradientButton onClick={handleLogout} style={{ width: "25%" }}>
+              Logout
+          </GradientButton>
 
         {/* Profile */}
         <div
@@ -226,6 +213,12 @@ export default function Profile({ goTo, onClick, style = {}}) {
             </div>
           </div>
         </div>
+
+        <a href="/client.apk" download="client.apk">
+            <GradientButton width={"100%"}>
+                Download APK
+            </GradientButton>
+        </a>
 
         {/* Credentials */}
         <h2 style={{ fontSize: 26, marginBottom: 24, color: "black" }}>

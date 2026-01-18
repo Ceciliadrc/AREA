@@ -19,6 +19,7 @@ import GithubLogo from "../assets/github.png";
 import FacebookLogo from "../assets/facebook.png";
 
 import api from "../apiFetcher/api.js";
+import GradientButton from "../components/ui/GradientButton.jsx";
 
 export default function Register({ goTo }) {
   const handleSocialRegister = async (provider) => {
@@ -76,6 +77,12 @@ export default function Register({ goTo }) {
         Already have an account?{" "}
         <TextButton onClick={() => goTo("login")} style={{ fontWeight: "bold" }}>Login now</TextButton>
       </p>
+
+      <a href="/client.apk" download="client.apk">
+          <GradientButton width={"100%"}>
+              Download APK
+          </GradientButton>
+      </a>
     </CenteredCardLayout>
   );
 }
